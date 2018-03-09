@@ -1,0 +1,28 @@
+--cpu Cortex-M3
+"stm32107\startup_stm32f107xc.o"
+"stm32107\system_stm32f1xx.o"
+"stm32107\main.o"
+"stm32107\stm32f1xx_it.o"
+"stm32107\stm32f1xx_hal_msp.o"
+"stm32107\user_can.o"
+"stm32107\user_uart.o"
+"stm32107\user_time.o"
+"stm32107\stm32f1xx_hal_can.o"
+"stm32107\stm32f1xx_hal_gpio.o"
+"stm32107\stm32f1xx_hal_tim_ex.o"
+"stm32107\stm32f1xx_hal_rcc.o"
+"stm32107\stm32f1xx_hal_flash.o"
+"stm32107\stm32f1xx_hal_flash_ex.o"
+"stm32107\stm32f1xx_hal_rcc_ex.o"
+"stm32107\stm32f1xx_hal_uart.o"
+"stm32107\stm32f1xx_hal_gpio_ex.o"
+"stm32107\stm32f1xx_hal_tim.o"
+"stm32107\stm32f1xx_hal_dma.o"
+"stm32107\stm32f1xx_hal_cortex.o"
+"stm32107\stm32f1xx_hal.o"
+"stm32107\stm32f1xx_hal_pwr.o"
+--library_type=microlib --strict --scatter "STM32107\STM32107.sct"
+
+--diag_suppress=L6329 --summary_stderr --info summarysizes --map --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list "STM32107.map" -o STM32107\STM32107.axf
