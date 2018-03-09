@@ -3,7 +3,7 @@
 #include "stm32f1xx_hal.h"
 
 #define seat_amount 10 //设置座椅的个数；
-
+#define NO_ACK 0x666
 
 #define SAFE(x) do{ \
 	__set_PRIMASK(1); \

@@ -593,11 +593,11 @@ ARM Macro Assembler    Page 10
               00000000 
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M3 --apcs=interw
 ork --depend=stm32107\startup_stm32f107xc.d -ostm32107\startup_stm32f107xc.o -I
-C:\Users\SHUQUEE8006\Desktop\LTC中央系统板GIT\STM32107\MDK-ARM\RTE -IC:\Keil_v5
-\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\Include -IC:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DF
-P\2.2.0 --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 514
-" --predefine="_RTE_ SETA 1" --predefine="STM32F10X_CL SETA 1" --list=startup_s
-tm32f107xc.lst startup_stm32f107xc.s
+C:\Users\zhao\Desktop\STM32103-107\LTC中央系统板GIT\STM32107\MDK-ARM\RTE -IC:\K
+eil_v5\ARM\PACK\ARM\CMSIS\4.2.0\CMSIS\Include -IC:\Keil_v5\ARM\PACK\Keil\STM32F
+1xx_DFP\1.0.5\Device\Include --predefine="__MICROLIB SETA 1" --predefine="__UVI
+SION_VERSION SETA 514" --predefine="_RTE_ SETA 1" --predefine="STM32F10X_CL SET
+A 1" --list=startup_stm32f107xc.lst startup_stm32f107xc.s
 
 
 

@@ -58,6 +58,7 @@ UART_HandleTypeDef huart3;
 /* Private variables ---------------------------------------------------------*/
 uint8_t send_id;  //测试连发的数组标志
 uint8_t can_send_buff[8]="SHU QEE!";
+uint8_t loop;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -75,7 +76,7 @@ static void MX_TIM2_Init(void);
 /* USER CODE BEGIN 0 */
 
 /* USER CODE END 0 */
-
+     
 int main(void)
 {
 
@@ -118,19 +119,20 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-		  uint8_t i;
-			for(i=0;i<10;i++)   //循环发十次数据出去；
-		{  
-			 can_send(i,can_send_buff,8);
-			 if(hcan1.State!=HAL_CAN_STATE_READY)
-				 StdId_buff[send_id]=0x666;   //无应答代号；
-			 send_id++;
-		}
-		 send_id=0;
-		HAL_CAN_Receive_IT(&hcan1,CAN_FIFO0);
+			for(loop=0;loop<10;loop++)   //循环发十次数据出去；
+			{  
+				can_send(loop,can_send_buff,8);
+				if(hcan1.State!=HAL_CAN_STATE_READY)
+				{ 
+					StdId_buff[send_id]=NO_ACK;   //无应答代号；
+				} 
+				send_id++;
+			}
+			send_id=0;
+			HAL_CAN_Receive_IT(&hcan1,CAN_FIFO0);
 			HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_13);
-	    HAL_Delay(500);
-  }
+			HAL_Delay(500);
+		}
 	
   /* USER CODE END 3 */
 
