@@ -51,7 +51,6 @@ CAN_HandleTypeDef hcan;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-struct status status = {0};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -106,26 +105,10 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-			status.id = 0; /* ¸üÐÂid */
-		 	if(GET_ID_1())
-				status.id = status.id + 1;
-			if(GET_ID_2())
-				status.id = status.id + 2;
-			if(GET_ID_4())
-				status.id = status.id + 4;
-			if(GET_ID_8())
-				status.id = status.id + 8;
-			if(GET_ID_10())
-				status.id = status.id + 10;
-			if(GET_ID_20())
-				status.id = status.id + 20;
-			if(GET_ID_40())
-				status.id = status.id + 40;
-			if(GET_ID_80())
-				status.id = status.id + 80;
-			HAL_CAN_Receive_IT(&hcan,CAN_FIFO0);
-			HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
-			 HAL_Delay(500);
+		get_bcd();
+		HAL_CAN_Receive_IT(&hcan,CAN_FIFO0);
+		HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
+		HAL_Delay(500);
 			
   }
   /* USER CODE END 3 */
@@ -185,7 +168,7 @@ static void MX_CAN_Init(void)
 {
 
   hcan.Instance = CAN1;
-  hcan.Init.Prescaler = 6;
+  hcan.Init.Prescaler = 12;
   hcan.Init.Mode = CAN_MODE_NORMAL;
   hcan.Init.SJW = CAN_SJW_1TQ;
   hcan.Init.BS1 = CAN_BS1_5TQ;

@@ -63,31 +63,47 @@ void can_receive_callback(uint16_t sour_addr, uint8_t *data, uint16_t len)
 
 void can_send(uint16_t dest_addr, uint8_t *data, uint16_t len)
 {   
-	uint8_t i;
+	if(dest_addr>=0x7ff)
+	{
+		dest_addr=0x7ff;
+	}	
+	if(dest_addr<=0)
+	{
+		dest_addr=0;
+	}	
+	if(len>=8)
+	{
+		len=8;
+	}	
+	if(len<=0)
+	{
+		len=0;
+	}	
 	hcan1.pTxMsg->StdId=dest_addr; /*设置要发送数据的目标地址*/
 	hcan1.pTxMsg->DLC=len;
-	for(i=0;i<len;i++)
-	{	 
-		hcan1.pTxMsg->Data[i]=data[i];
-		if(HAL_CAN_Transmit(&hcan1, 20)==HAL_OK)
-		{
-
-		} 
-		else     
-		{ 
-
-
-		}	
+	if(HAL_CAN_Transmit(&hcan1, 20)==HAL_OK)
+	{
+		; /* do nothing */
 	} 
-
+	else     
+	{ 
+		; /* TODO: */
+	}	
 }
-
+uint8_t loop;
+uint8_t can_send_buff[8]="SHU QEE!";
 void can_process()
 {
-	
+	for(loop=0;loop<SEAT_AMOUNT;loop++)   //循环发十次数据出去；
+	{  
+		can_send(loop,can_send_buff,8);
+		HAL_Delay(2);
+		send_id++;
+	}
+	send_id=0;	
 }
 
-uint16_t StdId_buff[seat_amount];
+uint16_t StdId_buff[SEAT_AMOUNT];
 
 void HAL_CAN_RxCpltCallback(CAN_HandleTypeDef* hcan)
 {   
@@ -97,7 +113,6 @@ void HAL_CAN_RxCpltCallback(CAN_HandleTypeDef* hcan)
 		if(hcan1.pRxMsg->StdId==hcan1.pTxMsg->StdId)   /*存活*/
 		{  
 		StdId_buff[send_id]=hcan1.pRxMsg->StdId;
-
 		}
 		else       /*不存活*/
 		{

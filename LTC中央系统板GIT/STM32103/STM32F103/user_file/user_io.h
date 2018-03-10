@@ -11,6 +11,7 @@
 #define GET_ID_20() (!HAL_GPIO_ReadPin(INPUT_BCD2_2_GPIO_Port, INPUT_BCD2_2_Pin))
 #define GET_ID_40() (!HAL_GPIO_ReadPin(INPUT_BCD4_2_GPIO_Port, INPUT_BCD4_2_Pin))
 #define GET_ID_80() (!HAL_GPIO_ReadPin(INPUT_BCD8_2_GPIO_Port, INPUT_BCD8_2_Pin))
-extern void user_io_init(void);  
+extern void user_io_init(void); 
+extern void get_bcd(void);
 
 #endif

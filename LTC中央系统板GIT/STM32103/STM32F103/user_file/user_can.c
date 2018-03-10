@@ -60,38 +60,48 @@ void can_receive_callback(uint16_t sour_addr, uint8_t *data, uint16_t len)
   * @retval HAL status
   */
 
-HAL_StatusTypeDef can_send(uint16_t dest_addr, uint8_t *data, uint16_t len)
+void can_send(uint16_t dest_addr, uint8_t *data, uint16_t len)
 {   
-	 uint8_t i;
-	 hcan.pTxMsg->StdId=dest_addr; /*设置要发送数据的目标地址*/
-	 hcan.pTxMsg->DLC=len;
-	 for(i=0;i<len;i++)
-	{	 
-		 hcan.pTxMsg->Data[i]=data[i];
-		  if(HAL_CAN_Transmit(&hcan, 20)==HAL_OK)
-		 {
-				
-		 } 
-		 else     
-		 { 
-			 
-			
-		 }	
-	 } 
-	 return HAL_OK;
+	if(dest_addr>=0x7ff)
+	{
+		dest_addr=0x7ff;
+	}	
+	if(dest_addr<=0)
+	{
+		dest_addr=0;
+	}	
+	if(len>=8)
+	{
+		len=8;
+	}	
+	if(len<=0)
+	{
+		len=0;
+	}	
+	hcan.pTxMsg->StdId=dest_addr; /*设置要发送数据的目标地址*/
+	hcan.pTxMsg->DLC=len;
+	if(HAL_CAN_Transmit(&hcan, 20)==HAL_OK)
+	{
+
+	} 
+	else     
+	{ 
+
+
+	}	
 }
 
 uint16_t StdId_buff[seat_amount];
 
 void HAL_CAN_RxCpltCallback(CAN_HandleTypeDef* hcan)
 {   
-		  /*分析接收到的是什么数据*/
-	    if(hcan->pRxMsg->StdId==status.id)  /*接收到了对应的数据*/
-			{
-					/*返回数据帧给上位机*/
-				can_send(status.id, hcan->pTxMsg->Data,8); 
-			}	
-     	HAL_CAN_Receive_IT(hcan,CAN_FIFO0);
+	/*分析接收到的是什么数据*/
+	if(hcan->pRxMsg->StdId==status.id)  /*接收到了对应的数据*/
+	{
+		/*返回数据帧给上位机*/
+		can_send(status.id, hcan->pTxMsg->Data,8); 
+	}	
+	 HAL_CAN_Receive_IT(hcan,CAN_FIFO0);
 
 }
 
