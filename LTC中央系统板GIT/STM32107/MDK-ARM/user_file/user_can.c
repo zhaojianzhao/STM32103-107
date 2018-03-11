@@ -1,5 +1,7 @@
 #include "user_can.h"
 #include "user_config.h"
+#include "user_time.h"
+#include <string.h>
 
 CanTxMsgTypeDef TxMessage;
 CanRxMsgTypeDef RxMessage;
@@ -53,6 +55,16 @@ void can_receive_callback(uint16_t sour_addr, uint8_t *data, uint16_t len)
 
 }
 
+/*心跳发送轮询模块*/
+void heart_beat_checkout(void)
+{
+	if(timer4_enable_heart_beat_flag)
+	{
+		timer4_enable_heart_beat_flag=0;
+		can_process();
+	}	
+}
+
 /**
   * @brief  Transmits a CAN frame message.
   * @param  dest_addr: pointer to which dest_adrr  
@@ -90,17 +102,19 @@ void can_send(uint16_t dest_addr, uint8_t *data, uint16_t len)
 		; /* TODO: */
 	}	
 }
-uint8_t loop;
-uint8_t can_send_buff[8]="SHU QEE!";
+
+/*发送SEAT_AMOUNT 次的轮询“心跳”信号给座椅*/
+static uint16_t loop;
+static uint8_t can_send_buff[8]={0x00,0x55};
 void can_process()
 {
-	for(loop=0;loop<SEAT_AMOUNT;loop++)   //循环发十次数据出去；
+	for(loop=0x200;loop<loop+SEAT_AMOUNT;loop++)   //循环发 SEAT_AMOUNT 次数据出去；
 	{  
 		can_send(loop,can_send_buff,8);
-		HAL_Delay(2);
-		send_id++;
+		HAL_Delay(1);
+//		send_id++;
 	}
-	send_id=0;	
+//	send_id=0;	
 }
 
 uint16_t StdId_buff[SEAT_AMOUNT];
@@ -109,17 +123,50 @@ void HAL_CAN_RxCpltCallback(CAN_HandleTypeDef* hcan)
 {   
 	if(hcan->Instance==CAN1)
 	{
-		/*对比现在接收的ID号是否存活*/
-		if(hcan1.pRxMsg->StdId==hcan1.pTxMsg->StdId)   /*存活*/
-		{  
-		StdId_buff[send_id]=hcan1.pRxMsg->StdId;
-		}
-		else       /*不存活*/
+//		/*对比现在接收的ID号是否存活*/
+//		if(hcan1.pRxMsg->StdId==hcan1.pTxMsg->StdId)   /*存活*/
+//		{  
+//		StdId_buff[send_id]=hcan1.pRxMsg->StdId;
+//		}
+//		else       /*不存活*/
+//		{
+//		StdId_buff[send_id]=0x555;   //ID存活的乱码标志0X555;
+//		}	
+		
+		/*如果检测到的STDID号是#define HEART_BEAT 0x200  心跳的ID号；*/
+		if(hcan1.pRxMsg->StdId==HEART_BEAT)
 		{
-		StdId_buff[send_id]=0x555;   //ID存活的乱码标志0X555;
-		}	
-		HAL_CAN_Receive_IT(&hcan1,CAN_FIFO0);
+			
+		}
 	}
+	HAL_CAN_Receive_IT(&hcan1,CAN_FIFO0);
+}
 
+//////////*以下是模块移植*///////
+#pragma pack(1)
+
+typedef struct bus485_control_pack
+{	
+	uint8_t head;
+	uint8_t funcode;
+	uint8_t high[3];
+	uint8_t sp_seat;
+	uint8_t sp_env;
+	uint8_t seat_id;
+	uint8_t end;
+} bus485_control_pack_t;
+
+#pragma pack()
+
+bus485_control_pack_t pack = {.head=0xff, .end=0xee};
+
+void buscan_control(uint8_t *high, uint8_t sp_seat, uint8_t sp_env, uint8_t seat_id)
+{
+	pack.funcode = 0xc2;
+	memcpy(pack.high, high, sizeof(pack.high));
+	pack.sp_seat = sp_seat;
+	pack.sp_env = sp_env;
+	pack.seat_id = seat_id;
+	HAL_UART_Transmit_DMA(&huart3, (uint8_t *)&pack, sizeof(pack));
 }
 
