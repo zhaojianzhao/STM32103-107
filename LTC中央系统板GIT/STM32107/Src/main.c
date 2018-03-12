@@ -109,6 +109,7 @@ int main(void)
 
   /* USER CODE BEGIN 2 */
 	 user_uart_init();
+	 user_time_init();
    user_can_init();  
   /* USER CODE END 2 */
 
@@ -119,12 +120,11 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-
 		HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_13);
-//		can_process();
 		heart_beat_checkout();  //心跳发送轮询模块
-		printf_debug_info();   //*每秒打印存活的座椅ID号*/ 
-		HAL_Delay(1000);		
+		HAL_CAN_Receive_IT(&hcan1,CAN_FIFO0);
+//		printf_debug_info();   //*每秒打印存活的座椅ID号*/ 
+		HAL_Delay(500);		
 	}
 	
   /* USER CODE END 3 */
@@ -193,7 +193,7 @@ static void MX_CAN1_Init(void)
 
   hcan1.Instance = CAN1;
   hcan1.Init.Prescaler = 12;
-  hcan1.Init.Mode = CAN_MODE_NORMAL;
+  hcan1.Init.Mode = CAN_MODE_LOOPBACK;
   hcan1.Init.SJW = CAN_SJW_1TQ;
   hcan1.Init.BS1 = CAN_BS1_5TQ;
   hcan1.Init.BS2 = CAN_BS2_6TQ;

@@ -20,7 +20,7 @@ void Can_TXconfig()
 	hcan.pTxMsg->Data[6]='O';
 	hcan.pTxMsg->Data[7]='K';
 }
-
+/*32位列表模式*/
 void Can_RXconfig()
 {
    CAN_FilterConfTypeDef sFilterConfig;
@@ -28,11 +28,16 @@ void Can_RXconfig()
 	 sFilterConfig.BankNumber=14;
 	 sFilterConfig.FilterActivation=ENABLE;
    sFilterConfig.FilterFIFOAssignment=0;
-	 sFilterConfig.FilterIdHigh=0x0000;
-	 sFilterConfig.FilterIdLow=0x0000;
-	 sFilterConfig.FilterMaskIdHigh=0x0000;
-	 sFilterConfig.FilterMaskIdLow=0x0000;
-	 sFilterConfig.FilterMode=CAN_FILTERMODE_IDMASK;
+//	 sFilterConfig.FilterIdHigh=(0x200+status.id)<<5;
+//	 sFilterConfig.FilterIdLow=0x0000;
+//	 sFilterConfig.FilterMaskIdHigh=(0x200+status.id)<<5;
+//	 sFilterConfig.FilterMaskIdLow=0x0000;
+		 sFilterConfig.FilterIdHigh=0x0000;
+		 sFilterConfig.FilterIdLow=0x0000;
+		 sFilterConfig.FilterMaskIdHigh=0x0000;
+		 sFilterConfig.FilterMaskIdLow=0x0000;
+	
+	 sFilterConfig.FilterMode=CAN_FILTERMODE_IDLIST;
    sFilterConfig.FilterNumber=0;
 	 sFilterConfig.FilterScale=CAN_FILTERSCALE_32BIT;
 	
@@ -79,6 +84,14 @@ void can_send(uint16_t dest_addr, uint8_t *data, uint16_t len)
 		len=0;
 	}	
 	hcan.pTxMsg->StdId=dest_addr; /*设置要发送数据的目标地址*/
+	hcan.pTxMsg->Data[0]=data[0];
+	hcan.pTxMsg->Data[1]=data[1];
+	hcan.pTxMsg->Data[2]=data[2];
+	hcan.pTxMsg->Data[3]=data[3];
+	hcan.pTxMsg->Data[4]=data[4];
+	hcan.pTxMsg->Data[5]=data[5];
+	hcan.pTxMsg->Data[6]=data[6];
+	hcan.pTxMsg->Data[7]=data[7];	
 	hcan.pTxMsg->DLC=len;
 	if(HAL_CAN_Transmit(&hcan, 20)==HAL_OK)
 	{
@@ -90,16 +103,16 @@ void can_send(uint16_t dest_addr, uint8_t *data, uint16_t len)
 
 	}	
 }
-
+static uint8_t can_send_buff[8]={0x01,0x55};
 uint16_t StdId_buff[seat_amount];
 
 void HAL_CAN_RxCpltCallback(CAN_HandleTypeDef* hcan)
 {   
 	/*分析接收到的是什么数据*/
-	if(hcan->pRxMsg->StdId==status.id)  /*接收到了对应的数据*/
+	if(hcan->pRxMsg->StdId==(0x200+status.id))  /*接收到了对应的数据*/
 	{
 		/*返回数据帧给上位机*/
-		can_send(status.id, hcan->pTxMsg->Data,8); 
+		can_send((0x200+status.id),can_send_buff,8); 
 	}	
 	 HAL_CAN_Receive_IT(hcan,CAN_FIFO0);
 

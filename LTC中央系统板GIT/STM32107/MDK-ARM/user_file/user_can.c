@@ -41,11 +41,51 @@ void Can_RXconfig()
 	HAL_CAN_ConfigFilter(&hcan1,&sFilterConfig);	
 }	
 
+/*32位宽的掩码模式*/
+static void CANFilterConfig_Scale32_IdMask_StandardIdOnly(void)  
+{  
+	uint16_t      mask,num,tmp,i;  
+  CAN_FilterConfTypeDef  sFilterConfig;
+	hcan1.pRxMsg = &RxMessage;
+  uint32_t StdIdArray[SEAT_AMOUNT]={0};  
+	for(i=0;i<SEAT_AMOUNT;i++)
+	{
+		StdIdArray[i]=0x200+i;
+	}	
+     
+  sFilterConfig.FilterNumber = 0;               //使用过滤器0  
+  sFilterConfig.FilterMode = CAN_FILTERMODE_IDMASK;     //配置为掩码模式  
+  sFilterConfig.FilterScale = CAN_FILTERSCALE_32BIT;    //设置为32位宽  
+  sFilterConfig.FilterIdHigh =(StdIdArray[0]<<5);     //验证码可以设置为StdIdArray[]数组中任意一个，这里使用StdIdArray[0]作为验证码  
+  sFilterConfig.FilterIdLow =0;  
+    
+  mask =0x7ff;                      //下面开始计算屏蔽码  
+  num =sizeof(StdIdArray)/sizeof(StdIdArray[0]);  
+  for(i =0; i<num; i++)      //屏蔽码位StdIdArray[]数组中所有成员的同或结果  
+  {  
+    tmp =StdIdArray[i] ^ (~StdIdArray[0]);  //所有数组成员与第0个成员进行同或操作  
+    mask &=tmp;  
+  }  
+  sFilterConfig.FilterMaskIdHigh =(mask<<5);  
+  sFilterConfig.FilterMaskIdLow =0|0x02;        //只接收数据帧  
+    
+  sFilterConfig.FilterFIFOAssignment = 0;       //设置通过的数据帧进入到FIFO0中  
+  sFilterConfig.FilterActivation = ENABLE;  
+  sFilterConfig.BankNumber = 14;  
+    
+  if(HAL_CAN_ConfigFilter(&hcan1, &sFilterConfig) != HAL_OK)  
+  {  
+    Error_Handler();  
+  }  
+} 
+
+
 
 void user_can_init(void)
 { 
 	Can_TXconfig();
-	Can_RXconfig();
+//	Can_RXconfig();
+	CANFilterConfig_Scale32_IdMask_StandardIdOnly(); 
 	HAL_CAN_Receive_IT(&hcan1,CAN_FIFO0);
 }
 
@@ -92,38 +132,47 @@ void can_send(uint16_t dest_addr, uint8_t *data, uint16_t len)
 		len=0;
 	}	
 	hcan1.pTxMsg->StdId=dest_addr; /*设置要发送数据的目标地址*/
+	hcan1.pTxMsg->Data[0]=data[0];
+	hcan1.pTxMsg->Data[1]=data[1];
+	hcan1.pTxMsg->Data[2]=data[2];
+	hcan1.pTxMsg->Data[3]=data[3];
+	hcan1.pTxMsg->Data[4]=data[4];
+	hcan1.pTxMsg->Data[5]=data[5];
+	hcan1.pTxMsg->Data[6]=data[6];
+	hcan1.pTxMsg->Data[7]=data[7];
 	hcan1.pTxMsg->DLC=len;
-	if(HAL_CAN_Transmit(&hcan1, 20)==HAL_OK)
+	if(HAL_CAN_Transmit(&hcan1, 10)!=HAL_OK)
 	{
 		; /* do nothing */
 	} 
-	else     
-	{ 
-		; /* TODO: */
-	}	
 }
 
 /*发送SEAT_AMOUNT 次的轮询“心跳”信号给座椅*/
-static uint16_t loop;
+static uint16_t loop=0x200;
 static uint8_t can_send_buff[8]={0x00,0x55};
 void can_process()
 {
-	for(loop=0x200;loop<loop+SEAT_AMOUNT;loop++)   //循环发 SEAT_AMOUNT 次数据出去；
-	{  
-		can_send(loop,can_send_buff,8);
-		HAL_Delay(1);
-//		send_id++;
-	}
+//	for(loop=0x200;loop<(0x200+SEAT_AMOUNT);loop++)   //循环发 SEAT_AMOUNT 次数据出去；
+//	{  
+//		can_send(loop,can_send_buff,8);		
+////		send_id++;
+//	}
 //	send_id=0;	
+	can_send(loop,can_send_buff,8);	
+	loop++;
+	if(loop>=(0x200+SEAT_AMOUNT))
+	{
+		loop=0x200;
+	}	
 }
 
 uint16_t StdId_buff[SEAT_AMOUNT];
 
 void HAL_CAN_RxCpltCallback(CAN_HandleTypeDef* hcan)
-{   
+{  
 	if(hcan->Instance==CAN1)
 	{
-//		/*对比现在接收的ID号是否存活*/
+		/*对比现在接收的ID号是否存活*/
 //		if(hcan1.pRxMsg->StdId==hcan1.pTxMsg->StdId)   /*存活*/
 //		{  
 //		StdId_buff[send_id]=hcan1.pRxMsg->StdId;
@@ -132,12 +181,13 @@ void HAL_CAN_RxCpltCallback(CAN_HandleTypeDef* hcan)
 //		{
 //		StdId_buff[send_id]=0x555;   //ID存活的乱码标志0X555;
 //		}	
-		
+//		
 		/*如果检测到的STDID号是#define HEART_BEAT 0x200  心跳的ID号；*/
 		if(hcan1.pRxMsg->StdId==HEART_BEAT)
 		{
 			
 		}
+		printf("The StdId is %x\n",hcan1.pRxMsg->StdId);	
 	}
 	HAL_CAN_Receive_IT(&hcan1,CAN_FIFO0);
 }
