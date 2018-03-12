@@ -111,7 +111,6 @@ int main(void)
 
   /* USER CODE BEGIN 3 */
 		
-		HAL_CAN_Receive_IT(&hcan,CAN_FIFO0);
 		HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
 		HAL_Delay(500);
 			
