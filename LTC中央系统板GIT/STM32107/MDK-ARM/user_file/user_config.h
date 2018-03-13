@@ -2,6 +2,8 @@
 #define __USER_CONFIG_H
 #include "stm32f1xx_hal.h"
 
+#define BUS_CAN
+
 #define SEAT_AMOUNT 10 //设置座椅的个数；
 #define HEART_BEAT 0x200  //心跳的ID号；
 #define SAFE(x) do{ \
@@ -14,8 +16,8 @@
 enum MSG
 {
 	HIGHT_MSG=0x100,  //高度ID
-	SP_MSG,					  //特效ID
-	SPEED_MSG					//速度ID
+	SPEED_MSG,					//速度ID
+	SP_MSG					  //特效ID	
 };	
 
 extern uint8_t send_id;  //测试连发的数组标志

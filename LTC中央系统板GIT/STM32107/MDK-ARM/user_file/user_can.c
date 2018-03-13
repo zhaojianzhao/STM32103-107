@@ -151,6 +151,7 @@ void can_send(uint16_t dest_addr, uint8_t *data, uint16_t len)
 	{
 		; /* do nothing */
 	} 
+	CAN1->IER|=(1<<1);   //防止断开，IER^2位比复位；
 }
 
 /*发送SEAT_AMOUNT 次的轮询“心跳”信号给座椅*/
@@ -161,10 +162,7 @@ void can_process()
 	for(loop=HEART_BEAT;loop<(HEART_BEAT+SEAT_AMOUNT);loop++)   //循环发 SEAT_AMOUNT 次数据出去；
 	{  
 		can_send(loop,can_send_buff,8);	
-		CAN1->IER|=(1<<1);   //防止断开，IER^2位比复位；
-//		send_id++; 
 	}
-//	send_id=0;	
 }
 
 uint16_t StdId_buff[SEAT_AMOUNT];
@@ -185,7 +183,23 @@ void HAL_CAN_RxCpltCallback(CAN_HandleTypeDef* hcan)
 }
 
 //////////*以下是模块移植*///////
+//////////*以下是模块移植*///////
+//////////*以下是模块移植*///////
+//////////*以下是模块移植*///////
+//////////*以下是模块移植*///////
 #pragma pack(1)
+#ifndef BUS_CAN
+
+typedef struct
+{
+	uint8_t high[6];
+	uint8_t reserve_0[2];
+	uint8_t sp_seat;
+	uint8_t sp_env;
+	uint8_t reserve_1[6];
+	uint8_t reserve_2[255-16];
+	uint8_t switch_function;
+} ram_t;
 
 typedef struct bus485_control_pack
 {	
@@ -197,12 +211,32 @@ typedef struct bus485_control_pack
 	uint8_t seat_id;
 	uint8_t end;
 } bus485_control_pack_t;
+#else
 
+typedef struct
+{
+	uint8_t high[6];
+	uint8_t reserve_0[2];
+	uint8_t sp_seat;
+	uint8_t sp_env;
+	uint8_t speed[6];
+	uint8_t reserve_2[255-16];
+	uint8_t switch_function;
+} ram_t;
+
+typedef struct buscan_control_pack
+{	
+	uint8_t high[3];
+	uint8_t speed[3];
+	uint8_t sp_seat_env_id[3];
+} buscan_control_pack_t;
 #pragma pack()
+#endif
 
+#ifndef BUS_CAN
 bus485_control_pack_t pack = {.head=0xff, .end=0xee};
 
-void buscan_control(uint8_t *high, uint8_t sp_seat, uint8_t sp_env, uint8_t seat_id)
+void bus485_control(uint8_t *high, uint8_t sp_seat, uint8_t sp_env, uint8_t seat_id)
 {
 	pack.funcode = 0xc2;
 	memcpy(pack.high, high, sizeof(pack.high));
@@ -212,3 +246,19 @@ void buscan_control(uint8_t *high, uint8_t sp_seat, uint8_t sp_env, uint8_t seat
 	HAL_UART_Transmit_DMA(&huart3, (uint8_t *)&pack, sizeof(pack));
 }
 
+#else
+/*只做模块的编写，没有实际的去调用跟发送*/
+buscan_control_pack_t pack ;
+
+void buscan_control(uint8_t *high, uint8_t sp_seat, uint8_t sp_env,uint8_t *speed, uint8_t seat_id)
+{
+	memcpy(pack.high,high,sizeof(pack.high));
+	memcpy(pack.speed,speed,sizeof(pack.speed));
+	pack.sp_seat_env_id[0]=sp_env;
+	pack.sp_seat_env_id[1]=sp_seat;
+	pack.sp_seat_env_id[2]=seat_id;
+	can_send(HIGHT_MSG,pack.high,8);    //先发	HIGHT_MSG=0x100,  //高度ID
+	can_send(SPEED_MSG,pack.speed, 8)	;			//SPEED_MSG  速度ID
+	can_send(SP_MSG,pack.sp_seat_env_id,8);     //SP_MSG				  //特效ID
+}
+#endif

@@ -3,7 +3,7 @@
 <title>Static Call Graph - [STM32107\STM32107.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image STM32107\STM32107.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5050106: Last Updated: Tue Mar 13 14:13:23 2018
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5050106: Last Updated: Tue Mar 13 18:06:37 2018
 <BR><P>
 <H3>Maximum Stack Usage =        160 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -797,7 +797,7 @@ Global Symbols
 
 <P><STRONG><a name="[ac]"></a>__scatterload_zeroinit</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_zeroinit), UNUSED)
 
-<P><STRONG><a name="[92]"></a>can_process</STRONG> (Thumb, 50 bytes, Stack size 16 bytes, user_can.o(i.can_process))
+<P><STRONG><a name="[92]"></a>can_process</STRONG> (Thumb, 40 bytes, Stack size 16 bytes, user_can.o(i.can_process))
 <BR><BR>[Stack]<UL><LI>Max Depth = 64<LI>Call Chain = can_process &rArr; can_send &rArr; HAL_CAN_Transmit
 </UL>
 <BR>[Calls]<UL><LI><a href="#[93]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;can_send
@@ -805,7 +805,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[94]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;heart_beat_checkout
 </UL>
 
-<P><STRONG><a name="[93]"></a>can_send</STRONG> (Thumb, 86 bytes, Stack size 8 bytes, user_can.o(i.can_send))
+<P><STRONG><a name="[93]"></a>can_send</STRONG> (Thumb, 96 bytes, Stack size 8 bytes, user_can.o(i.can_send))
 <BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = can_send &rArr; HAL_CAN_Transmit
 </UL>
 <BR>[Calls]<UL><LI><a href="#[64]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_CAN_Transmit
