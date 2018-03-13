@@ -50,7 +50,7 @@ static void CANFilterConfig_Scale32_IdMask_StandardIdOnly(void)
   uint32_t StdIdArray[SEAT_AMOUNT]={0};  
 	for(i=0;i<SEAT_AMOUNT;i++)
 	{
-		StdIdArray[i]=0x200+i;
+		StdIdArray[i]=HEART_BEAT+i;
 	}	
      
   sFilterConfig.FilterNumber = 0;               //使用过滤器0  
@@ -98,9 +98,15 @@ void can_receive_callback(uint16_t sour_addr, uint8_t *data, uint16_t len)
 /*心跳发送轮询模块*/
 void heart_beat_checkout(void)
 {
+	uint8_t i;
 	if(timer4_enable_heart_beat_flag)
 	{
+		HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_13);
 		timer4_enable_heart_beat_flag=0;
+		for(i=0;i<SEAT_AMOUNT;i++)
+		{
+			StdId_buff[i]=0;
+		}
 		can_process();
 	}	
 }
@@ -148,22 +154,17 @@ void can_send(uint16_t dest_addr, uint8_t *data, uint16_t len)
 }
 
 /*发送SEAT_AMOUNT 次的轮询“心跳”信号给座椅*/
-static uint16_t loop=0x200;
+static uint16_t loop=HEART_BEAT;
 static uint8_t can_send_buff[8]={0x00,0x55};
 void can_process()
 {
-//	for(loop=0x200;loop<(0x200+SEAT_AMOUNT);loop++)   //循环发 SEAT_AMOUNT 次数据出去；
-//	{  
-//		can_send(loop,can_send_buff,8);		
-////		send_id++;
-//	}
+	for(loop=HEART_BEAT;loop<(HEART_BEAT+SEAT_AMOUNT);loop++)   //循环发 SEAT_AMOUNT 次数据出去；
+	{  
+		can_send(loop,can_send_buff,8);	
+		CAN1->IER|=(1<<1);   //防止断开，IER^2位比复位；
+//		send_id++; 
+	}
 //	send_id=0;	
-	can_send(loop,can_send_buff,8);	
-	loop++;
-	if(loop>=(0x200+SEAT_AMOUNT))
-	{
-		loop=0x200;
-	}	
 }
 
 uint16_t StdId_buff[SEAT_AMOUNT];
@@ -171,24 +172,15 @@ uint16_t StdId_buff[SEAT_AMOUNT];
 void HAL_CAN_RxCpltCallback(CAN_HandleTypeDef* hcan)
 {  
 	if(hcan->Instance==CAN1)
-	{
-		/*对比现在接收的ID号是否存活*/
-//		if(hcan1.pRxMsg->StdId==hcan1.pTxMsg->StdId)   /*存活*/
-//		{  
-//		StdId_buff[send_id]=hcan1.pRxMsg->StdId;
-//		}
-//		else       /*不存活*/
-//		{
-//		StdId_buff[send_id]=0x555;   //ID存活的乱码标志0X555;
-//		}	
-//		
+	{	
 		/*如果检测到的STDID号是#define HEART_BEAT 0x200  心跳的ID号；*/
-		if(hcan1.pRxMsg->StdId==HEART_BEAT)
+		if(((hcan1.pRxMsg->StdId&HEART_BEAT)==HEART_BEAT)&&(hcan1.pRxMsg->Data[0]==0x01)&&(hcan1.pRxMsg->Data[1]==0x55))
 		{
-			
+		 StdId_buff[(hcan1.pRxMsg->StdId-HEART_BEAT)]=	hcan1.pRxMsg->StdId;
 		}
-		printf("The StdId is %x\n",hcan1.pRxMsg->StdId);	
+			
 	}
+	CAN1->IER|=(1<<1);
 	HAL_CAN_Receive_IT(&hcan1,CAN_FIFO0);
 }
 

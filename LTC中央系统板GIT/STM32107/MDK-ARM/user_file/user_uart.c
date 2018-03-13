@@ -19,7 +19,7 @@ void printf_debug_info(void)
 	uint8_t i;
 	for(i=0;i<SEAT_AMOUNT;i++) 
 	{
-		printf("\r\nThe live %d ID is %x\r",i+1,StdId_buff[i]);//打印当前存活的ID号；
+		printf("\r\nThe live %d ID is %x\r",i,StdId_buff[i]);//打印当前存活的ID号；
 	}
 	printf("\n");
 }

@@ -23,8 +23,8 @@ Section Cross References
     main.o(i.main) refers to main.o(i.MX_GPIO_Init) for MX_GPIO_Init
     main.o(i.main) refers to main.o(i.MX_CAN_Init) for MX_CAN_Init
     main.o(i.main) refers to main.o(i.MX_TIM5_Init) for MX_TIM5_Init
-    main.o(i.main) refers to user_can.o(i.user_can_init) for user_can_init
     main.o(i.main) refers to user_io.o(i.get_bcd) for get_bcd
+    main.o(i.main) refers to user_can.o(i.user_can_init) for user_can_init
     main.o(i.main) refers to stm32f1xx_hal_gpio.o(i.HAL_GPIO_TogglePin) for HAL_GPIO_TogglePin
     main.o(i.main) refers to stm32f1xx_hal.o(i.HAL_Delay) for HAL_Delay
     stm32f1xx_hal_msp.o(i.HAL_CAN_MspDeInit) refers to stm32f1xx_hal_gpio.o(i.HAL_GPIO_DeInit) for HAL_GPIO_DeInit
@@ -1109,23 +1109,23 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
 
-       472         44          0          0        132     483098   main.o
-        36          8        304          0       1024        788   startup_stm32f103xe.o
-       132         22          0          4          0       3787   stm32f1xx_hal.o
-      2044         30          0          0          0       7076   stm32f1xx_hal_can.o
-       228         14          0          0          0      27221   stm32f1xx_hal_cortex.o
-       516         42          0          0          0       3784   stm32f1xx_hal_gpio.o
-       296         32          0          0          0       2155   stm32f1xx_hal_msp.o
-      1232         80          0          0          0       4410   stm32f1xx_hal_rcc.o
-       910         20          0          0          0       9247   stm32f1xx_hal_tim.o
-        84          0          0          0          0       2370   stm32f1xx_hal_tim_ex.o
-        54         12          0          0          0       4961   stm32f1xx_it.o
-        72         16         16          4          0       1231   system_stm32f1xx.o
-       340         48          0          8         64       3399   user_can.o
-       168         12          0          1          0       1349   user_io.o
+       472         44          0          0        132     483214   main.o
+        36          8        304          0       1024        796   startup_stm32f103xe.o
+       132         22          0          4          0       3835   stm32f1xx_hal.o
+      2044         30          0          0          0       7136   stm32f1xx_hal_can.o
+       228         14          0          0          0      27293   stm32f1xx_hal_cortex.o
+       516         42          0          0          0       3816   stm32f1xx_hal_gpio.o
+       296         32          0          0          0       2183   stm32f1xx_hal_msp.o
+      1232         80          0          0          0       4450   stm32f1xx_hal_rcc.o
+       910         20          0          0          0       9335   stm32f1xx_hal_tim.o
+        84          0          0          0          0       2402   stm32f1xx_hal_tim_ex.o
+        54         12          0          0          0       5037   stm32f1xx_it.o
+        72         16         16          4          0       1247   system_stm32f1xx.o
+       340         48          0          8         64       3447   user_can.o
+       168         12          0          1          0       1373   user_io.o
 
     ----------------------------------------------------------------------
-      6598        380        352         20       1220     554876   Object Totals
+      6598        380        352         20       1220     555564   Object Totals
          0          0         32          0          0          0   (incl. Generated)
         14          0          0          3          0          0   (incl. Padding)
 
@@ -1164,8 +1164,8 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-      6684        396        352         20       1220     551716   Grand Totals
-      6684        396        352         20       1220     551716   ELF Image Totals
+      6684        396        352         20       1220     552404   Grand Totals
+      6684        396        352         20       1220     552404   ELF Image Totals
       6684        396        352         20          0          0   ROM Totals
 
 ==============================================================================

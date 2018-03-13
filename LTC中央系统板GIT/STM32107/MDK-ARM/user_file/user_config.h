@@ -18,7 +18,7 @@ enum MSG
 	SPEED_MSG					//速度ID
 };	
 
-//extern uint8_t send_id;  //测试连发的数组标志
+extern uint8_t send_id;  //测试连发的数组标志
 extern uint16_t StdId_buff[SEAT_AMOUNT];
 extern  uint8_t timer4_enable_heart_beat_flag;
 extern void can_process(void);

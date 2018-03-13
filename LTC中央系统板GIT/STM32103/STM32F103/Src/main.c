@@ -99,8 +99,8 @@ int main(void)
   MX_TIM5_Init();
 
   /* USER CODE BEGIN 2 */
-   user_can_init();
-	 get_bcd();
+	get_bcd();
+	user_can_init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
