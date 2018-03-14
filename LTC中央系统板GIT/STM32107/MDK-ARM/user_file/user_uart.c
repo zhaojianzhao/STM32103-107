@@ -2,9 +2,11 @@
 #include "user_config.h"
 #include "user_uart.h"
 
+static uint8_t uart2_receive_data = 0U;
 void user_uart_init(void)
 {
 	__HAL_UART_ENABLE(&huart3);
+	HAL_UART_Transmit_IT(&huart2,(uint8_t *)&uart2_receive_data,1);
 }
 
 int fputc(int ch, FILE *f)

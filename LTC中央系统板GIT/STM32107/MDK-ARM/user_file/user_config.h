@@ -27,5 +27,6 @@ extern void can_process(void);
 extern CAN_HandleTypeDef hcan1;
 extern TIM_HandleTypeDef htim2;
 extern TIM_HandleTypeDef htim4;
+extern UART_HandleTypeDef huart2;
 extern UART_HandleTypeDef huart3;
 #endif
