@@ -120,9 +120,9 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-		heart_beat_checkout();  //心跳发送轮询模块
-		printf_debug_info();   //*每秒打印存活的座椅ID号*/ 	
-		HAL_Delay(1000);
+		can_action_date_sent();
+		heart_beat_checkout();  //心跳发送轮询模块 
+//		printf_debug_info();   //*每秒打印存活的座椅ID号*/ 	
 	}
 	
   /* USER CODE END 3 */

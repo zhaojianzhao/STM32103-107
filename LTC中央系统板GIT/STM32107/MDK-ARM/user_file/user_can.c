@@ -95,14 +95,14 @@ void can_receive_callback(uint16_t sour_addr, uint8_t *data, uint16_t len)
 
 }
 
-/*心跳发送轮询模块*/
+/*2秒一次心跳发送轮询模块*/
 void heart_beat_checkout(void)
 {
 	uint8_t i;
-	if(timer4_enable_heart_beat_flag)
+	if(get_timer4_enable_heart_beat_flag())
 	{
 		HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_13);
-		timer4_enable_heart_beat_flag=0;
+		clr_timer4_enable_heart_beat_flag();
 		for(i=0;i<SEAT_AMOUNT;i++)
 		{
 			StdId_buff[i]=0;
@@ -262,3 +262,17 @@ void buscan_control(uint8_t *high, uint8_t sp_seat, uint8_t sp_env,uint8_t *spee
 	can_send(SP_MSG,pack.sp_seat_env_id,8);     //SP_MSG				  //特效ID
 }
 #endif
+
+
+
+uint8_t shared_memory_ram[1024] = {0};
+ram_t *ram = (ram_t *)shared_memory_ram;
+/*50毫秒一次的动作数据发送*/
+void can_action_date_sent(void)
+{
+	if(get_timer2_enable_can_sent_flag())
+	{
+		clr_timer2_enable_can_sent_flag();
+		buscan_control(ram->high,ram->sp_seat,ram->sp_env,ram->speed,0);
+	}				
+}	

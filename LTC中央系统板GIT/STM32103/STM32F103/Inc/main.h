@@ -47,6 +47,12 @@
 
 /* Private define ------------------------------------------------------------*/
 
+#define PE3_Pin GPIO_PIN_3
+#define PE3_GPIO_Port GPIOE
+#define PE4_Pin GPIO_PIN_4
+#define PE4_GPIO_Port GPIOE
+#define PE5_Pin GPIO_PIN_5
+#define PE5_GPIO_Port GPIOE
 #define LED_Pin GPIO_PIN_1
 #define LED_GPIO_Port GPIOB
 #define INPUT_BCD1_1_Pin GPIO_PIN_12

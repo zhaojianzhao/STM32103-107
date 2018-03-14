@@ -2,10 +2,10 @@
 #define __USER_CONFIG_H
 #include "stm32f1xx_hal.h"
 
-#define BUS_CAN
+#define BUS_CAN   //使用CAN总线模式
 
 #define SEAT_AMOUNT 10 //设置座椅的个数；
-#define HEART_BEAT 0x200  //心跳的ID号；
+#define HEART_BEAT 0x200  //心跳的ID号段号；
 #define SAFE(x) do{ \
 	__set_PRIMASK(1); \
 	x; \
@@ -22,7 +22,6 @@ enum MSG
 
 extern uint8_t send_id;  //测试连发的数组标志
 extern uint16_t StdId_buff[SEAT_AMOUNT];
-extern  uint8_t timer4_enable_heart_beat_flag;
 extern void can_process(void);
 
 extern CAN_HandleTypeDef hcan1;
