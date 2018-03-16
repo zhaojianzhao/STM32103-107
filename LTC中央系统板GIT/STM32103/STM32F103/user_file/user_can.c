@@ -78,7 +78,7 @@ static void CANFilterConfig_Scale32_IdMask_StandardIdOnly(uint8_t filter_num)
 
 void user_can_init(void)
 { Can_TXconfig();
-	Can_RXconfig(0,HEART_BEAT+status.id);
+	Can_RXconfig(0,HEART_BEAT);
 	CANFilterConfig_Scale32_IdMask_StandardIdOnly(1);  
  	HAL_CAN_Receive_IT(&hcan,CAN_FIFO0);
 }

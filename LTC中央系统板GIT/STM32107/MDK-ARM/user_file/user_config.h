@@ -13,16 +13,16 @@
 }while(0)	//原子操作
 
 /*设置Msg的类型*/
-enum MSG
+enum msg
 {
-	HIGHT_MSG=0x100,  //高度ID
-	SPEED_MSG,					//速度ID
-	SP_MSG					  //特效ID	
+	HIGHT_MSG_ID=0x100,  //高度ID
+	SPEED_MSG_ID,					//速度ID
+	SP_MSG_ID					  //特效ID	
 };	
 
 extern uint8_t send_id;  //测试连发的数组标志
-extern uint16_t StdId_buff[SEAT_AMOUNT];
-extern void can_process(void);
+extern uint16_t stdid_buff[SEAT_AMOUNT];
+extern void can_hb_process(void);
 
 extern CAN_HandleTypeDef hcan1;
 extern TIM_HandleTypeDef htim2;
