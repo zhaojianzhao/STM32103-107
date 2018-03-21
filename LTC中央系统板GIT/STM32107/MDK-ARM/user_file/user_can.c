@@ -80,7 +80,6 @@ static void can_scale32_idmask(void)
 } 
 
 
-
 void user_can_init(void)
 { 
 	can_txmsg_config();
@@ -144,7 +143,7 @@ void can_send(uint16_t msg_id, uint8_t *data, uint16_t len)
 	{
 		; /* do nothing */
 	} 
-	CAN1->IER|=(1<<1);   //防止断开，IER^2位比复位；
+	CAN1->IER|=(1<<1);   //防止断开，IER^2位复位；
 }
 
 /*发送SEAT_AMOUNT 次的轮询“心跳”信号给座椅，通过can_send_buff[0]代表座椅地址  can_send_buff[1]代表心跳信号  can_send_buff[2]代表验证码*/

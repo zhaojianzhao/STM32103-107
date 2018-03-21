@@ -114,9 +114,9 @@ int main(void)
   MX_USART2_UART_Init();
 
   /* USER CODE BEGIN 2 */
-	 user_uart_init();
-	 user_time_init();
-   user_can_init();  
+	user_uart_init();
+	user_time_init();
+	user_can_init();  
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -126,9 +126,9 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-		can_action_date_sent();
-		heart_beat_checkout();  //心跳发送轮询模块 
-//		printf_debug_info();   //*每秒打印存活的座椅ID号*/ 	
+	can_action_date_sent();
+	heart_beat_checkout();  //心跳发送轮询模块 
+//printf_debug_info();   //*每秒打印存活的座椅ID号*/ 	
 	}
 	
   /* USER CODE END 3 */

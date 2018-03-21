@@ -6,6 +6,7 @@
 
 #define SEAT_AMOUNT 10 //设置座椅的个数；
 #define HEART_BEAT 0x200  //心跳的ID号段号；
+
 #define SAFE(x) do{ \
 	__set_PRIMASK(1); \
 	x; \
