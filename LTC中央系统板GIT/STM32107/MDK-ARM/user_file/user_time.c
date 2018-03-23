@@ -7,7 +7,6 @@ static uint8_t timer4_heart_beat_flag=0;
 void user_time_init(void)
 { 
 	HAL_TIM_Base_Start_IT(&htim2);
-	HAL_TIM_Base_Start_IT(&htim4);
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
@@ -16,12 +15,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	{
 		SAFE(can_sent_flag=1);  //50MS发送一次CAN的数据；
 	}	
-	/*2秒一次发送轮询的座椅信号*/
-	if(htim->Instance==TIM4)
-	{
-		SAFE(timer4_heart_beat_flag=1);  //使能发送“心跳”信号轮询； 
-	}		
 }	
+
 uint8_t get_heart_beat_flag(void)  
 {
 	uint8_t timer4_flag;
@@ -46,3 +41,20 @@ void clr_can_sent_flag(void)
 	SAFE(can_sent_flag=0);
 }
 
+uint8_t tick_flag;
+void HAL_SYSTICK_Callback(void)
+{
+	SAFE(tick_flag=1);
+}	
+
+uint8_t get_tick_flag(void)
+{
+	uint8_t flag;
+	flag=tick_flag;
+	return flag;
+}
+
+void clr_tick_flag(void)
+{
+	SAFE(tick_flag=0);
+}

@@ -103,20 +103,12 @@ void can_send(uint16_t dest_addr, uint8_t *data, uint16_t len)
 	{
 		dest_addr=0x7ff;
 	}	
-	if(dest_addr<=0)
-	{
-		dest_addr=0;
-	}	
 	if(len>=8)
 	{
 		len=8;
 	}	
-	if(len<=0)
-	{
-		len=0;
-	}	
 	hcan.pTxMsg->StdId=dest_addr; /*设置要发送数据的目标地址*/
-	hcan.pTxMsg->Data[0]=data[0];
+	hcan.pTxMsg->Data[0]=status.id;
 	hcan.pTxMsg->Data[1]=data[1];
 	hcan.pTxMsg->Data[2]=data[2];
 	hcan.pTxMsg->Data[3]=data[3];
@@ -125,7 +117,7 @@ void can_send(uint16_t dest_addr, uint8_t *data, uint16_t len)
 	hcan.pTxMsg->Data[6]=data[6];
 	hcan.pTxMsg->Data[7]=data[7];	
 	hcan.pTxMsg->DLC=len;
-	if(HAL_CAN_Transmit(&hcan, 10)==HAL_OK)
+	if(HAL_CAN_Transmit(&hcan, 1)==HAL_OK)
 	{
 		; /* do nothing */
 	} 
@@ -136,13 +128,14 @@ void can_send(uint16_t dest_addr, uint8_t *data, uint16_t len)
 	}	
 	CAN1->IER|=(1<<1);
 }
-static uint8_t can_send_buff[8]={0x01,0x55};
+static uint8_t can_send_buff[8]={0,0x01,0x55};
 uint16_t StdId_buff[SEAT_AMOUNT];
 uint32_t HIGHT_MSG_rec,SPEED_MSG_rec,SP_MSG_rec;
 void HAL_CAN_RxCpltCallback(CAN_HandleTypeDef* hcan)
 {   
 	/*分析接收到的是什么数据*/
-	if((hcan->pRxMsg->StdId==(HEART_BEAT+status.id))&&(hcan->pRxMsg->Data[0]==0x00)&&(hcan->pRxMsg->Data[1]==0x55))  /*接收到了对应的"心跳"数据*/
+	/*can_send_buff[0]代表座椅地址  can_send_buff[1]代表心跳信号  can_send_buff[2]代表验证码*/
+	if(hcan->pRxMsg->StdId==HEART_BEAT)  /*接收到了对应的"心跳"数据*/
 	{
 		/*返回"心跳"数据帧给串口板*/
 		can_send((HEART_BEAT+status.id),can_send_buff,8); 

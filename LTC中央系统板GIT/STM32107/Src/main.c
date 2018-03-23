@@ -127,8 +127,7 @@ int main(void)
 
   /* USER CODE BEGIN 3 */
 	can_action_date_sent();
-	heart_beat_checkout();  //心跳发送轮询模块 
-//printf_debug_info();   //*每秒打印存活的座椅ID号*/ 	
+	time_event();  //事件发生时间戳；
 	}
 	
   /* USER CODE END 3 */

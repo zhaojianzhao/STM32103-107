@@ -30,3 +30,4 @@ stm32f103\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h
 stm32f103\main.o: ..\user_file\user_can.h
 stm32f103\main.o: ..\user_file\user_io.h
 stm32f103\main.o: ..\user_file\user_config.h
+stm32f103\main.o: ..\user_file\user_time.h

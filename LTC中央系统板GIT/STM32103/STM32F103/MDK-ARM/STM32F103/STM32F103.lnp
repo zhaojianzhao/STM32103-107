@@ -4,6 +4,7 @@
 "stm32f103\stm32f1xx_it.o"
 "stm32f103\user_can.o"
 "stm32f103\user_io.o"
+"stm32f103\user_time.o"
 "stm32f103\stm32f1xx_hal_gpio.o"
 "stm32f103\stm32f1xx_hal_flash_ex.o"
 "stm32f103\stm32f1xx_hal_can.o"

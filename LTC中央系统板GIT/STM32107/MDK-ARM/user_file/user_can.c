@@ -86,21 +86,17 @@ void user_can_init(void)
 	can_rxmsg_config(); 
 	HAL_CAN_Receive_IT(&hcan1,CAN_FIFO0);
 }
-
+static uint32_t time2s;
 /*2秒一次心跳发送轮询模块*/
 void heart_beat_checkout(void)
 {
 	uint8_t i;
-	if(get_heart_beat_flag())
+	HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_13);
+	for(i=0;i<SEAT_AMOUNT;i++)
 	{
-		HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_13);
-		clr_heart_beat_flag(); 
-		for(i=0;i<SEAT_AMOUNT;i++)
-		{
-			stdid_buff[i]=0; 
-		}
-		can_hb_process(); 
-	}	
+		stdid_buff[i]=0; 
+	}
+	can_hb_process(); 
 }
 
 /**
@@ -117,17 +113,9 @@ void can_send(uint16_t msg_id, uint8_t *data, uint16_t len)
 	{
 		msg_id=0x7ff;
 	}	
-	if(msg_id<=0)
-	{
-		msg_id=0;
-	}	
 	if(len>=8)
 	{
 		len=8;
-	}	
-	if(len<=0)
-	{
-		len=0;
 	}	
 	hcan1.pTxMsg->StdId=msg_id; /*设置要发送数据的目标地址*/
 	hcan1.pTxMsg->Data[0]=data[0];
@@ -150,10 +138,7 @@ void can_send(uint16_t msg_id, uint8_t *data, uint16_t len)
 static uint8_t can_send_buff[8]={0x00,0x00,0x55};
 void can_hb_process()
 {
-	for(can_send_buff[0]=0;can_send_buff[0]<SEAT_AMOUNT;can_send_buff[0]++)   //循环发 SEAT_AMOUNT 次数据出去；
-	{  
-		can_send(HEART_BEAT,can_send_buff,8);	
-	}
+	can_send(HEART_BEAT,can_send_buff,8);	
 }
 
 uint16_t stdid_buff[SEAT_AMOUNT];
@@ -163,7 +148,7 @@ void HAL_CAN_RxCpltCallback(CAN_HandleTypeDef* hcan)
 	if(hcan->Instance==CAN1)
 	{	
 		/*如果检测到的STDID号是#define HEART_BEAT 0x200  心跳的ID号；*/
-		if(((hcan1.pRxMsg->StdId&HEART_BEAT)==HEART_BEAT)&&(hcan1.pRxMsg->Data[0]==0x01)&&(hcan1.pRxMsg->Data[1]==0x55))
+		if(((hcan1.pRxMsg->StdId&HEART_BEAT)==HEART_BEAT)&&(hcan1.pRxMsg->Data[1]==0x01)&&(hcan1.pRxMsg->Data[2]==0x55))
 		{
 		 stdid_buff[(hcan1.pRxMsg->StdId-HEART_BEAT)]=	hcan1.pRxMsg->StdId;
 		}
@@ -172,6 +157,21 @@ void HAL_CAN_RxCpltCallback(CAN_HandleTypeDef* hcan)
 	CAN1->IER|=(1<<1);
 	HAL_CAN_Receive_IT(&hcan1,CAN_FIFO0);
 }
+
+/*时间嵌入事件*/
+void time_event(void)
+{
+	if(get_tick_flag())
+	{		
+		clr_tick_flag(); 
+		time2s++;
+		if(time2s>=2000)
+		{
+			time2s=0;
+			heart_beat_checkout();
+		}
+	}
+}	
 
 //////////*以下是模块移植*///////
 //////////*以下是模块移植*///////
