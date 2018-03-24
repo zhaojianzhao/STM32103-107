@@ -5,7 +5,6 @@
 void user_time_init(void)
 { 
 
-
 }
 static uint8_t tick_flag;
 void HAL_SYSTICK_Callback(void)

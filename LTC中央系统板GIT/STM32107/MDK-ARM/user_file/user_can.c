@@ -3,6 +3,7 @@
 #include "user_time.h"
 #include <string.h>
 
+struct status status={0};
 CanTxMsgTypeDef txmessage;
 CanRxMsgTypeDef rxmessage;
 
@@ -86,15 +87,24 @@ void user_can_init(void)
 	can_rxmsg_config(); 
 	HAL_CAN_Receive_IT(&hcan1,CAN_FIFO0);
 }
+
 static uint32_t time2s;
-/*2秒一次心跳发送轮询模块*/
+/*2秒一次心跳发送轮询模块，并且定义FLAG来标志某个座椅缺减的次数并记录*/
 void heart_beat_checkout(void)
 {
 	uint8_t i;
 	HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_13);
 	for(i=0;i<SEAT_AMOUNT;i++)
 	{
-		stdid_buff[i]=0; 
+		if(stdid_buff[i]==0)        //判断某个座椅是否缺席；
+		{
+			status.hb_count[i]++;			//缺席次数加一；
+			if(status.hb_count[i]>=3)
+			{
+				stdid_buff[i]=0;         //当缺席的次数大于等于3次就默认缺席；
+			}
+		}	
+		stdid_buff[i]=0;
 	}
 	can_hb_process(); 
 }
@@ -127,7 +137,7 @@ void can_send(uint16_t msg_id, uint8_t *data, uint16_t len)
 	hcan1.pTxMsg->Data[6]=data[6];
 	hcan1.pTxMsg->Data[7]=data[7];
 	hcan1.pTxMsg->DLC=len;
-	if(HAL_CAN_Transmit(&hcan1, 10)!=HAL_OK)
+	if(HAL_CAN_Transmit(&hcan1, 1)!=HAL_OK)
 	{
 		; /* do nothing */
 	} 
@@ -157,21 +167,6 @@ void HAL_CAN_RxCpltCallback(CAN_HandleTypeDef* hcan)
 	CAN1->IER|=(1<<1);
 	HAL_CAN_Receive_IT(&hcan1,CAN_FIFO0);
 }
-
-/*时间嵌入事件*/
-void time_event(void)
-{
-	if(get_tick_flag())
-	{		
-		clr_tick_flag(); 
-		time2s++;
-		if(time2s>=2000)
-		{
-			time2s=0;
-			heart_beat_checkout();
-		}
-	}
-}	
 
 //////////*以下是模块移植*///////
 //////////*以下是模块移植*///////
@@ -238,9 +233,8 @@ void bus485_control(uint8_t *high, uint8_t sp_seat, uint8_t sp_env, uint8_t seat
 }
 
 #else
-/*只做模块的编写，没有实际的去调用跟发送*/
 buscan_control_pack_t pack ;
-
+static uint8_t mark_cantx;
 void buscan_control(uint8_t *high, uint8_t sp_seat, uint8_t sp_env,uint8_t *speed, uint8_t seat_id)
 {
 	memcpy(pack.high,high,sizeof(pack.high));
@@ -248,22 +242,39 @@ void buscan_control(uint8_t *high, uint8_t sp_seat, uint8_t sp_env,uint8_t *spee
 	pack.sp_seat_env_id[0]=sp_env;
 	pack.sp_seat_env_id[1]=sp_seat;
 	pack.sp_seat_env_id[2]=seat_id;
-	can_send(HIGHT_MSG_ID,pack.high,8);    //先发	HIGHT_MSG_ID=0x100,  //高度ID
-	can_send(SPEED_MSG_ID,pack.speed, 8)	;			//SPEED_MSG_ID  速度ID
-	can_send(SP_MSG_ID,pack.sp_seat_env_id,8);     //SP_MSG_ID				  //特效ID
+	switch(mark_cantx)
+	{
+		case 0: mark_cantx++;
+						can_send(HIGHT_MSG_ID,pack.high,8);    //先发	HIGHT_MSG_ID=0x100,  //高度ID
+						break;
+		case 1: mark_cantx++;
+						can_send(SPEED_MSG_ID,pack.speed, 8)	;			//SPEED_MSG_ID  速度ID
+						break;
+		case 2: mark_cantx=0;
+						clr_can_sent_flag();		
+						can_send(SP_MSG_ID,pack.sp_seat_env_id,8);     //SP_MSG_ID				  //特效ID
+						break;
+	}			
 }
 #endif
 
-
-
 uint8_t shared_memory_ram[1024] = {0};
 ram_t *ram = (ram_t *)shared_memory_ram;
-/*50毫秒一次的动作数据发送*/
-void can_action_date_sent(void)
+/*时间嵌入事件*/
+void time_event(void)
 {
-	if(get_can_sent_flag())
+	if(get_tick_flag())
+	{		
+		clr_tick_flag(); 
+		time2s++;
+		if(time2s>=2000)      //定义2S来发送心跳信号；
+		{
+			time2s=0;
+			heart_beat_checkout();
+		}
+	}	
+	if(get_can_sent_flag())  /*50毫秒一次的动作数据发送*/
 	{
-		clr_can_sent_flag();
 		buscan_control(ram->high,ram->sp_seat,ram->sp_env,ram->speed,0);
-	}				
+	}	
 }	

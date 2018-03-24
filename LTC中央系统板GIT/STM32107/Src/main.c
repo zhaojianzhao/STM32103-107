@@ -126,7 +126,6 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-	can_action_date_sent();
 	time_event();  //事件发生时间戳；
 	}
 	

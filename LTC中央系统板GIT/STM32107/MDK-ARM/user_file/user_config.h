@@ -21,6 +21,12 @@ enum msg
 	SP_MSG_ID					  //特效ID	
 };	
 
+struct status
+{
+	uint8_t hb_count[SEAT_AMOUNT];
+};
+
+extern struct status status;
 extern uint8_t send_id;  //测试连发的数组标志
 extern uint16_t stdid_buff[SEAT_AMOUNT];
 extern void can_hb_process(void);
