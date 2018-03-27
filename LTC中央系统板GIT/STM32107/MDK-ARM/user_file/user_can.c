@@ -1,6 +1,7 @@
 #include "user_can.h"
 #include "user_config.h"
 #include "user_time.h"
+#include "user_uart.h"
 #include <string.h>
 
 struct status status={0};
@@ -261,20 +262,42 @@ void buscan_control(uint8_t *high, uint8_t sp_seat, uint8_t sp_env,uint8_t *spee
 uint8_t shared_memory_ram[1024] = {0};
 ram_t *ram = (ram_t *)shared_memory_ram;
 /*时间嵌入事件*/
+static uint32_t time10s;
+static uint8_t update;										//串口数据更新标志
 void time_event(void)
 {
+	SAFE(update=frame.enable);
 	if(get_tick_flag())
 	{		
 		clr_tick_flag(); 
 		time2s++;
+		time10s++;
 		if(time2s>=2000)      //定义2S来发送心跳信号；
 		{
 			time2s=0;
 			heart_beat_checkout();
 		}
+		if(time10s>=100)      //定义100ms来发送；
+		{
+			time10s=0;	
+			printf_debug_info();
+		}	
+		
 	}	
-	if(get_can_sent_flag())  /*50毫秒一次的动作数据发送*/
+//	if(get_can_sent_flag())  /*50毫秒一次的动作数据发送*/
+//	{
+//		buscan_control(ram->high,ram->sp_seat,ram->sp_env,ram->speed,0);
+//	}	
+	if(update)
 	{
+		pack.high[0]=frame.buff[2];
+		pack.high[1]=frame.buff[3];
+		pack.high[2]=frame.buff[4];
+		pack.sp_seat_env_id[0]=frame.buff[5];    //环境特效；
+		pack.sp_seat_env_id[1]=frame.buff[6];    //座椅特效；
+		pack.sp_seat_env_id[2]=frame.buff[7];    //ID号；
 		buscan_control(ram->high,ram->sp_seat,ram->sp_env,ram->speed,0);
+		update=0;
 	}	
+	CAN1->IER|=(1<<1); //确保CAN可以在线热插拔；	
 }	

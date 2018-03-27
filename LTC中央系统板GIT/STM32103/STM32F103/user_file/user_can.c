@@ -138,6 +138,7 @@ void time_event(void)
 			HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
 		}				
 	}
+	CAN1->IER|=(1<<1); //确保CAN可以在线热插拔；
 }
 
 static uint8_t can_send_buff[8]={0,0x01,0x55};

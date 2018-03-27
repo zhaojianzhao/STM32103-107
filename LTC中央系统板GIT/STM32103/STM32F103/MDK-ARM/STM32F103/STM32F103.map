@@ -826,9 +826,9 @@ Image Symbol Table
     i.get_tick_flag                          0x08001bf8   Section        0  user_time.o(i.get_tick_flag)
     i.main                                   0x08001c04   Section        0  main.o(i.main)
     i.time_event                             0x08001c28   Section        0  user_can.o(i.time_event)
-    i.user_can_init                          0x08001c60   Section        0  user_can.o(i.user_can_init)
-    .constdata                               0x08001cb0   Section       12  user_can.o(.constdata)
-    .constdata                               0x08001cbc   Section       16  system_stm32f1xx.o(.constdata)
+    i.user_can_init                          0x08001c68   Section        0  user_can.o(i.user_can_init)
+    .constdata                               0x08001cb8   Section       12  user_can.o(.constdata)
+    .constdata                               0x08001cc4   Section       16  system_stm32f1xx.o(.constdata)
     .data                                    0x20000000   Section       24  user_can.o(.data)
     time50ms                                 0x20000000   Data           4  user_can.o(.data)
     can_send_buff                            0x20000010   Data           8  user_can.o(.data)
@@ -989,11 +989,11 @@ Image Symbol Table
     get_bcd                                  0x08001b51   Thumb Code   156  user_io.o(i.get_bcd)
     get_tick_flag                            0x08001bf9   Thumb Code     6  user_time.o(i.get_tick_flag)
     main                                     0x08001c05   Thumb Code    34  main.o(i.main)
-    time_event                               0x08001c29   Thumb Code    48  user_can.o(i.time_event)
-    user_can_init                            0x08001c61   Thumb Code    70  user_can.o(i.user_can_init)
-    AHBPrescTable                            0x08001cbc   Data          16  system_stm32f1xx.o(.constdata)
-    Region$$Table$$Base                      0x08001ccc   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x08001cec   Number         0  anon$$obj.o(Region$$Table)
+    time_event                               0x08001c29   Thumb Code    52  user_can.o(i.time_event)
+    user_can_init                            0x08001c69   Thumb Code    70  user_can.o(i.user_can_init)
+    AHBPrescTable                            0x08001cc4   Data          16  system_stm32f1xx.o(.constdata)
+    Region$$Table$$Base                      0x08001cd4   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x08001cf4   Number         0  anon$$obj.o(Region$$Table)
     hight_msg_rec                            0x20000004   Data           4  user_can.o(.data)
     speed_msg_rec                            0x20000008   Data           4  user_can.o(.data)
     sp_msg_rec                               0x2000000c   Data           4  user_can.o(.data)
@@ -1014,9 +1014,9 @@ Memory Map of the image
 
   Image Entry point : 0x08000131
 
-  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x00001d10, Max: 0x00080000, ABSOLUTE)
+  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x00001d18, Max: 0x00080000, ABSOLUTE)
 
-    Execution Region ER_IROM1 (Base: 0x08000000, Size: 0x00001cec, Max: 0x00080000, ABSOLUTE)
+    Execution Region ER_IROM1 (Base: 0x08000000, Size: 0x00001cf4, Max: 0x00080000, ABSOLUTE)
 
     Base Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -1115,11 +1115,11 @@ Memory Map of the image
     0x08001bf8   0x0000000c   Code   RO          395    i.get_tick_flag     user_time.o
     0x08001c04   0x00000022   Code   RO            9    i.main              main.o
     0x08001c26   0x00000002   PAD
-    0x08001c28   0x00000038   Code   RO          298    i.time_event        user_can.o
-    0x08001c60   0x00000050   Code   RO          299    i.user_can_init     user_can.o
-    0x08001cb0   0x0000000c   Data   RO          302    .constdata          user_can.o
-    0x08001cbc   0x00000010   Data   RO         2348    .constdata          system_stm32f1xx.o
-    0x08001ccc   0x00000020   Data   RO         2402    Region$$Table       anon$$obj.o
+    0x08001c28   0x00000040   Code   RO          298    i.time_event        user_can.o
+    0x08001c68   0x00000050   Code   RO          299    i.user_can_init     user_can.o
+    0x08001cb8   0x0000000c   Data   RO          302    .constdata          user_can.o
+    0x08001cc4   0x00000010   Data   RO         2348    .constdata          system_stm32f1xx.o
+    0x08001cd4   0x00000020   Data   RO         2402    Region$$Table       anon$$obj.o
 
 
     Execution Region RW_IRAM1 (Base: 0x20000000, Size: 0x000004e8, Max: 0x00010000, ABSOLUTE)
@@ -1144,24 +1144,24 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
 
-       500         42          0          0        132     483474   main.o
-        36          8        304          0       1024        788   startup_stm32f103xe.o
-       104         22          0          4          0       3199   stm32f1xx_hal.o
-      2044         30          0          0          0       7076   stm32f1xx_hal_can.o
-       226         14          0          0          0      26694   stm32f1xx_hal_cortex.o
-       516         42          0          0          0       3784   stm32f1xx_hal_gpio.o
-       296         32          0          0          0       2155   stm32f1xx_hal_msp.o
-      1232         80          0          0          0       4410   stm32f1xx_hal_rcc.o
-       910         20          0          0          0       9247   stm32f1xx_hal_tim.o
-        84          0          0          0          0       2370   stm32f1xx_hal_tim_ex.o
-        54         12          0          0          0       4961   stm32f1xx_it.o
-        72         16         16          4          0       1231   system_stm32f1xx.o
-       636         90         12         24         64       4517   user_can.o
-       168         12          0          1          0       1397   user_io.o
-        60         18          0          1          0       4287   user_time.o
+       500         42          0          0        132     483598   main.o
+        36          8        304          0       1024        796   startup_stm32f103xe.o
+       104         22          0          4          0       3239   stm32f1xx_hal.o
+      2044         30          0          0          0       7136   stm32f1xx_hal_can.o
+       226         14          0          0          0      26758   stm32f1xx_hal_cortex.o
+       516         42          0          0          0       3816   stm32f1xx_hal_gpio.o
+       296         32          0          0          0       2183   stm32f1xx_hal_msp.o
+      1232         80          0          0          0       4450   stm32f1xx_hal_rcc.o
+       910         20          0          0          0       9335   stm32f1xx_hal_tim.o
+        84          0          0          0          0       2402   stm32f1xx_hal_tim_ex.o
+        54         12          0          0          0       5037   stm32f1xx_it.o
+        72         16         16          4          0       1247   system_stm32f1xx.o
+       644         94         12         24         64       4553   user_can.o
+       168         12          0          1          0       1421   user_io.o
+        60         18          0          1          0       4327   user_time.o
 
     ----------------------------------------------------------------------
-      6952        438        364         36       1220     559590   Object Totals
+      6960        442        364         36       1220     560298   Object Totals
          0          0         32          0          0          0   (incl. Generated)
         14          0          0          2          0          0   (incl. Padding)
 
@@ -1200,15 +1200,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-      7040        454        364         36       1220     556274   Grand Totals
-      7040        454        364         36       1220     556274   ELF Image Totals
-      7040        454        364         36          0          0   ROM Totals
+      7048        458        364         36       1220     556982   Grand Totals
+      7048        458        364         36       1220     556982   ELF Image Totals
+      7048        458        364         36          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                 7404 (   7.23kB)
+    Total RO  Size (Code + RO Data)                 7412 (   7.24kB)
     Total RW  Size (RW Data + ZI Data)              1256 (   1.23kB)
-    Total ROM Size (Code + RO Data + RW Data)       7440 (   7.27kB)
+    Total ROM Size (Code + RO Data + RW Data)       7448 (   7.27kB)
 
 ==============================================================================
 
