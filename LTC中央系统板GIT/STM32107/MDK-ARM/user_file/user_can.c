@@ -44,7 +44,7 @@ void can_rxmsg_config()
 }	
 
 /*32位宽的掩码模式*/
-static void can_scale32_idmask(void)  
+void can_scale32_idmask(void)  
 {  
 	uint16_t      mask,num,tmp,i;  
   CAN_FilterConfTypeDef  sfilterconfig;
@@ -238,7 +238,7 @@ buscan_control_pack_t pack ;
 static uint8_t mark_cantx;
 void buscan_control(uint8_t *high, uint8_t sp_seat, uint8_t sp_env,uint8_t *speed, uint8_t seat_id)
 {
-	memcpy(pack.high,high,sizeof(pack.high));
+//	memcpy(pack.high,high,sizeof(pack.high));
 	memcpy(pack.speed,speed,sizeof(pack.speed));
 	pack.sp_seat_env_id[0]=sp_env;
 	pack.sp_seat_env_id[1]=sp_seat;
@@ -293,10 +293,7 @@ void time_event(void)
 		pack.high[0]=frame.buff[2];
 		pack.high[1]=frame.buff[3];
 		pack.high[2]=frame.buff[4];
-		pack.sp_seat_env_id[0]=frame.buff[5];    //环境特效；
-		pack.sp_seat_env_id[1]=frame.buff[6];    //座椅特效；
-		pack.sp_seat_env_id[2]=frame.buff[7];    //ID号；
-		buscan_control(ram->high,ram->sp_seat,ram->sp_env,ram->speed,0);
+		buscan_control(pack.high,frame.buff[6],frame.buff[5],ram->speed,0);
 		update=0;
 	}	
 	CAN1->IER|=(1<<1); //确保CAN可以在线热插拔；	

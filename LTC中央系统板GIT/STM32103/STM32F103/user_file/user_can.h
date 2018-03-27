@@ -4,5 +4,4 @@
 
 extern void user_can_init(void);
 extern void time_event(void);
-extern void can_send(uint16_t dest_addr, uint8_t *data, uint16_t len);
 #endif

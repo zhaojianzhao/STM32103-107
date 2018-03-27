@@ -3,7 +3,7 @@
 <title>Static Call Graph - [STM32107\STM32107.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image STM32107\STM32107.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5050106: Last Updated: Tue Mar 27 15:28:16 2018
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5050106: Last Updated: Tue Mar 27 21:46:46 2018
 <BR><P>
 <H3>Maximum Stack Usage =        168 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -855,7 +855,7 @@ Global Symbols
 
 <P><STRONG><a name="[bd]"></a>__scatterload_zeroinit</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_zeroinit), UNUSED)
 
-<P><STRONG><a name="[9a]"></a>buscan_control</STRONG> (Thumb, 104 bytes, Stack size 16 bytes, user_can.o(i.buscan_control))
+<P><STRONG><a name="[9a]"></a>buscan_control</STRONG> (Thumb, 94 bytes, Stack size 16 bytes, user_can.o(i.buscan_control))
 <BR><BR>[Stack]<UL><LI>Max Depth = 64<LI>Call Chain = buscan_control &rArr; can_send &rArr; HAL_CAN_Transmit
 </UL>
 <BR>[Calls]<UL><LI><a href="#[9b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;clr_can_sent_flag
@@ -944,7 +944,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;time_event
 </UL>
 
-<P><STRONG><a name="[a5]"></a>time_event</STRONG> (Thumb, 130 bytes, Stack size 24 bytes, user_can.o(i.time_event))
+<P><STRONG><a name="[a5]"></a>time_event</STRONG> (Thumb, 116 bytes, Stack size 24 bytes, user_can.o(i.time_event))
 <BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = time_event &rArr; buscan_control &rArr; can_send &rArr; HAL_CAN_Transmit
 </UL>
 <BR>[Calls]<UL><LI><a href="#[a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;printf_debug_info

@@ -4,6 +4,7 @@
 
 CanTxMsgTypeDef txmessage;
 CanRxMsgTypeDef rxmessage;
+struct rx_buff msg_buff[MSG_ID_COUNT];
 
 static void can_txconfig()
 {
@@ -126,8 +127,11 @@ void can_send(uint16_t msg_addr, uint8_t *data, uint16_t len)
 
 /*时间事件*/
 static uint32_t time50ms;
+static uint8_t hb_tx_flag;
+static uint8_t can_send_buff[8]={0,0x01,0x55};
 void time_event(void)
 {
+	uint8_t i;
 	if(get_tick_flag())
 	{
 		time50ms++;
@@ -138,37 +142,62 @@ void time_event(void)
 			HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
 		}				
 	}
+	if(hb_tx_flag)
+	{
+		/*返回"心跳"数据帧给串口板*/
+		hb_tx_flag=0;
+		can_send((HEART_BEAT+status.id),can_send_buff,8); 
+	}	
+	if(status.hight_id)
+	{
+		status.hight_id=0;
+		for(i=0;i<8;i++)
+		{
+			msg_buff[HIGHT_MSG_ID].date[i]=hcan.pRxMsg->Data[i];
+		}
+	}
+	if(status.speed_id)
+	{
+		status.speed_id=0;
+		for(i=0;i<8;i++)
+		{
+			msg_buff[SPEED_MSG_ID].date[i]=hcan.pRxMsg->Data[i];
+		}		
+	}
+	if(status.sp_id)
+	{
+		status.sp_id=0;
+		for(i=0;i<8;i++)
+		{
+			msg_buff[SP_MSG_ID].date[i]=hcan.pRxMsg->Data[i];
+		}				
+	}	
 	CAN1->IER|=(1<<1); //确保CAN可以在线热插拔；
 }
 
-static uint8_t can_send_buff[8]={0,0x01,0x55};
 uint16_t stdid_buff[SEAT_AMOUNT];
-uint32_t hight_msg_rec,speed_msg_rec,sp_msg_rec;
-
 void HAL_CAN_RxCpltCallback(CAN_HandleTypeDef* hcan)
 {   
 	/*分析接收到的是什么数据*/
 	/*can_send_buff[0]代表座椅地址  can_send_buff[1]代表心跳信号  can_send_buff[2]代表验证码*/
 	if(hcan->pRxMsg->StdId==HEART_BEAT)  /*接收到了对应的"心跳"数据*/
 	{
-		/*返回"心跳"数据帧给串口板*/
-		can_send((HEART_BEAT+status.id),can_send_buff,8); 
+		hb_tx_flag=1;
 	}	
-	
 	if(hcan->pRxMsg->StdId==HIGHT_MSG_ID)		/*收到了动作高度数据0x100段*/
 	{
 		HAL_GPIO_TogglePin(PE3_GPIO_Port,PE3_Pin);
-		hight_msg_rec++;
+		status.hight_id=1;	
 	}	
 	if(hcan->pRxMsg->StdId==SPEED_MSG_ID)		/*收到了动作速度数据0x101段*/
 	{
 		HAL_GPIO_TogglePin(PE4_GPIO_Port,PE4_Pin);
-		speed_msg_rec++;
+		status.speed_id=1;
 	}		
 	if(hcan->pRxMsg->StdId==SP_MSG_ID)		/*收到了环境特效，座椅特效，ID数据0x102段*/
 	{
 		HAL_GPIO_TogglePin(PE5_GPIO_Port,PE5_Pin);
-		sp_msg_rec++;
+		status.sp_id=1;
 	}		
 	CAN1->IER|=(1<<1);
 	HAL_CAN_Receive_IT(hcan,CAN_FIFO0);
