@@ -129,6 +129,7 @@ void can_send(uint16_t msg_addr, uint8_t *data, uint16_t len)
 static uint32_t time50ms;
 static uint8_t hb_tx_flag;
 static uint8_t can_send_buff[8]={0,0x01,0x55};
+uint32_t k1[8],k2[8],k3[8];
 void time_event(void)
 {
 	uint8_t i;
@@ -154,6 +155,7 @@ void time_event(void)
 		for(i=0;i<8;i++)
 		{
 			msg_buff[HIGHT_MSG_ID].date[i]=hcan.pRxMsg->Data[i];
+			k1[i]=hcan.pRxMsg->Data[i];
 		}
 	}
 	if(status.speed_id)
@@ -162,6 +164,7 @@ void time_event(void)
 		for(i=0;i<8;i++)
 		{
 			msg_buff[SPEED_MSG_ID].date[i]=hcan.pRxMsg->Data[i];
+			k2[i]=hcan.pRxMsg->Data[i];
 		}		
 	}
 	if(status.sp_id)
@@ -170,6 +173,7 @@ void time_event(void)
 		for(i=0;i<8;i++)
 		{
 			msg_buff[SP_MSG_ID].date[i]=hcan.pRxMsg->Data[i];
+			k3[i]=hcan.pRxMsg->Data[i];
 		}				
 	}	
 	CAN1->IER|=(1<<1); //确保CAN可以在线热插拔；

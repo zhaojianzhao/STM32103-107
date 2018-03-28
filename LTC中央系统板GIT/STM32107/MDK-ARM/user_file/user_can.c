@@ -119,7 +119,8 @@ void heart_beat_checkout(void)
   */
 
 void can_send(uint16_t msg_id, uint8_t *data, uint16_t len)
-{   
+{  
+	uint8_t i;
 	if(msg_id>=0x7ff)
 	{
 		msg_id=0x7ff;
@@ -129,15 +130,11 @@ void can_send(uint16_t msg_id, uint8_t *data, uint16_t len)
 		len=8;
 	}	
 	hcan1.pTxMsg->StdId=msg_id; /*设置要发送数据的目标地址*/
-	hcan1.pTxMsg->Data[0]=data[0];
-	hcan1.pTxMsg->Data[1]=data[1];
-	hcan1.pTxMsg->Data[2]=data[2];
-	hcan1.pTxMsg->Data[3]=data[3];
-	hcan1.pTxMsg->Data[4]=data[4];
-	hcan1.pTxMsg->Data[5]=data[5];
-	hcan1.pTxMsg->Data[6]=data[6];
-	hcan1.pTxMsg->Data[7]=data[7];
 	hcan1.pTxMsg->DLC=len;
+	for(i=0;i<len;i++)
+	{
+		hcan1.pTxMsg->Data[i]=data[i];
+	}
 	if(HAL_CAN_Transmit(&hcan1, 1)!=HAL_OK)
 	{
 		; /* do nothing */
@@ -246,14 +243,15 @@ void buscan_control(uint8_t *high, uint8_t sp_seat, uint8_t sp_env,uint8_t *spee
 	switch(mark_cantx)
 	{
 		case 0: mark_cantx++;
-						can_send(HIGHT_MSG_ID,pack.high,8);    //先发	HIGHT_MSG_ID=0x100,  //高度ID
+						can_send(HIGHT_MSG_ID,pack.high,3);    //先发	HIGHT_MSG_ID=0x100,  //高度ID
 						break;
 		case 1: mark_cantx++;
-						can_send(SPEED_MSG_ID,pack.speed, 8)	;			//SPEED_MSG_ID  速度ID
+						can_send(SPEED_MSG_ID,pack.speed, 3)	;			//SPEED_MSG_ID  速度ID
 						break;
 		case 2: mark_cantx=0;
-						clr_can_sent_flag();		
-						can_send(SP_MSG_ID,pack.sp_seat_env_id,8);     //SP_MSG_ID				  //特效ID
+						clr_can_sent_flag();
+						frame.enable=0;
+						can_send(SP_MSG_ID,pack.sp_seat_env_id,3);     //SP_MSG_ID				  //特效ID
 						break;
 	}			
 }
@@ -293,8 +291,7 @@ void time_event(void)
 		pack.high[0]=frame.buff[2];
 		pack.high[1]=frame.buff[3];
 		pack.high[2]=frame.buff[4];
-		buscan_control(pack.high,frame.buff[6],frame.buff[5],ram->speed,0);
-		update=0;
+		buscan_control(pack.high,frame.buff[6],frame.buff[5],ram->speed,frame.buff[7]);
 	}	
 	CAN1->IER|=(1<<1); //确保CAN可以在线热插拔；	
 }	

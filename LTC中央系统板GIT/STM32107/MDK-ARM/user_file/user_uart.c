@@ -9,7 +9,7 @@ void user_uart_init(void)
 	memset((void *)&frame,0,sizeof(frame));
 	__HAL_UART_ENABLE(&huart2);
 	__HAL_UART_ENABLE(&huart3);
-	HAL_UART_Transmit_IT(&huart2,(uint8_t *)&uart2_receive_data,1);
+	HAL_UART_Receive_IT(&huart2, (uint8_t *)&(uart2_receive_data), 1);
 }
 
 int fputc(int ch, FILE *f)
@@ -38,7 +38,7 @@ void printf_debug_info(void)
 struct frame frame={0};
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-	if(huart->Instance==USART3)
+	if(huart->Instance==USART2)
 	{
 		if(frame.index == 0 && frame.data == 0xff)	//ÅÐ¶¨Ö¡Í·0xff
 		{
