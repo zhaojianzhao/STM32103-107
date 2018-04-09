@@ -49,13 +49,13 @@ void can_scale32_idmask(void)
 	uint16_t      mask,num,tmp,i;  
   CAN_FilterConfTypeDef  sfilterconfig;
 	hcan1.pRxMsg = &rxmessage;
-  uint32_t stdid_array[SEAT_AMOUNT]={0};  
-	for(i=0;i<SEAT_AMOUNT;i++)
-	{
-		stdid_array[i]=HEART_BEAT+i;
-	}	
+  uint32_t stdid_array[SEAT_AMOUNT]={STATUS_MSG_ID,NM_MSG_ID};  
+//	for(i=0;i<SEAT_AMOUNT;i++)
+//	{
+//		stdid_array[i]=HEART_BEAT+i;
+//	}	
      
-  sfilterconfig.FilterNumber = 0;               //使用过滤器0  
+  sfilterconfig.FilterNumber = 1;               //使用过滤器0  
   sfilterconfig.FilterMode = CAN_FILTERMODE_IDMASK;     //配置为掩码模式  
   sfilterconfig.FilterScale = CAN_FILTERSCALE_32BIT;    //设置为32位宽  
   sfilterconfig.FilterIdHigh =(stdid_array[0]<<5);     //验证码可以设置为StdIdArray[]数组中任意一个，这里使用StdIdArray[0]作为验证码  
@@ -85,7 +85,8 @@ void can_scale32_idmask(void)
 void user_can_init(void)
 { 
 	can_txmsg_config();
-	can_rxmsg_config(); 
+	can_rxmsg_config();
+  can_scale32_idmask();  	
 	HAL_CAN_Receive_IT(&hcan1,CAN_FIFO0);
 }
 
@@ -160,7 +161,17 @@ void HAL_CAN_RxCpltCallback(CAN_HandleTypeDef* hcan)
 		{
 		 stdid_buff[(hcan1.pRxMsg->StdId-HEART_BEAT)]=	hcan1.pRxMsg->StdId;
 		}
-			
+		/*如果接受到的是STATUS_MSG_ID 状态信号*/
+		if(hcan1.pRxMsg->StdId==STATUS_MSG_ID)
+		{
+		  HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_14);
+
+		}
+		/*如果接受到的是NM_MSG_ID 状态信号*/
+		if(hcan1.pRxMsg->StdId==NM_MSG_ID)
+		{
+		  HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_13);
+		}		
 	}
 	CAN1->IER|=(1<<1);
 	HAL_CAN_Receive_IT(&hcan1,CAN_FIFO0);
@@ -264,34 +275,30 @@ static uint32_t time10s;
 static uint8_t update;										//串口数据更新标志
 void time_event(void)
 {
-	SAFE(update=frame.enable);
-	if(get_tick_flag())
-	{		
-		clr_tick_flag(); 
-		time2s++;
-		time10s++;
-		if(time2s>=2000)      //定义2S来发送心跳信号；
-		{
-			time2s=0;
-			heart_beat_checkout();
-		}
-		if(time10s>=100)      //定义100ms来发送；
-		{
-			time10s=0;	
-			printf_debug_info();
-		}	
-		
-	}	
-//	if(get_can_sent_flag())  /*50毫秒一次的动作数据发送*/
-//	{
-//		buscan_control(ram->high,ram->sp_seat,ram->sp_env,ram->speed,0);
+//	SAFE(update=frame.enable);
+//	if(get_tick_flag())
+//	{		
+//		clr_tick_flag(); 
+//		time2s++;
+//		time10s++;
+//		if(time2s>=2000)      //定义2S来发送心跳信号；
+//		{
+//			time2s=0;
+//			heart_beat_checkout();
+//		}
+//		if(time10s>=100)      //定义100ms来发送；
+//		{
+//			time10s=0;	
+//			printf_debug_info();
+//		}	
+//		
 //	}	
-	if(update)
-	{
-		pack.high[0]=frame.buff[2];
-		pack.high[1]=frame.buff[3];
-		pack.high[2]=frame.buff[4];
-		buscan_control(pack.high,frame.buff[6],frame.buff[5],ram->speed,frame.buff[7]);
-	}	
+//	if(update)
+//	{
+//		pack.high[0]=frame.buff[2];
+//		pack.high[1]=frame.buff[3];
+//		pack.high[2]=frame.buff[4];
+//		buscan_control(pack.high,frame.buff[6],frame.buff[5],ram->speed,frame.buff[7]);
+//	}	
 	CAN1->IER|=(1<<1); //确保CAN可以在线热插拔；	
 }	

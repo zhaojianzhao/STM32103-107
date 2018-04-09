@@ -32,3 +32,4 @@ stm32107\main.o: .\user_file\user_can.h
 stm32107\main.o: .\user_file\user_time.h
 stm32107\main.o: .\user_file\user_config.h
 stm32107\main.o: .\user_file\user_uart.h
+stm32107\main.o: .\user_file\sw_timer.h

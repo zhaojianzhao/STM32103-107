@@ -45,6 +45,7 @@
 #include  "user_time.h"
 #include  "user_uart.h"
 #include "user_config.h"
+#include "sw_timer.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -114,6 +115,7 @@ int main(void)
 	user_uart_init();
 	user_time_init();
 	user_can_init();  
+	sw_timer_init(); 
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -123,7 +125,8 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-	time_event();  //事件发生时间戳；
+	time_event();
+	sw_timer_handle(); 
 	}
 	
   /* USER CODE END 3 */

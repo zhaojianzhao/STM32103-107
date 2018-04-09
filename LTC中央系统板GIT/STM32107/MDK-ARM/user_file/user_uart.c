@@ -1,5 +1,6 @@
 #include "stm32f1xx_hal.h"
 #include "user_config.h"
+#include "user_can.h"
 #include "user_uart.h"
 #include <string.h>
 

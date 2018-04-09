@@ -128,8 +128,8 @@ void can_send(uint16_t msg_addr, uint8_t *data, uint16_t len)
 /*时间事件*/
 static uint32_t time50ms;
 static uint8_t hb_tx_flag;
+static uint8_t update_flag;
 static uint8_t can_send_buff[8]={0,0x01,0x55};
-uint32_t k1[8],k2[8],k3[8];
 void time_event(void)
 {
 	uint8_t i;
@@ -155,7 +155,6 @@ void time_event(void)
 		for(i=0;i<8;i++)
 		{
 			msg_buff[HIGHT_MSG_ID].date[i]=hcan.pRxMsg->Data[i];
-			k1[i]=hcan.pRxMsg->Data[i];
 		}
 	}
 	if(status.speed_id)
@@ -164,7 +163,6 @@ void time_event(void)
 		for(i=0;i<8;i++)
 		{
 			msg_buff[SPEED_MSG_ID].date[i]=hcan.pRxMsg->Data[i];
-			k2[i]=hcan.pRxMsg->Data[i];
 		}		
 	}
 	if(status.sp_id)
@@ -173,8 +171,12 @@ void time_event(void)
 		for(i=0;i<8;i++)
 		{
 			msg_buff[SP_MSG_ID].date[i]=hcan.pRxMsg->Data[i];
-			k3[i]=hcan.pRxMsg->Data[i];
 		}				
+	}	
+	if(status.rx_cnt==3)
+	{
+		update_flag = 1;
+    status.rx_cnt=0;		
 	}	
 	CAN1->IER|=(1<<1); //确保CAN可以在线热插拔；
 }
@@ -207,5 +209,40 @@ void HAL_CAN_RxCpltCallback(CAN_HandleTypeDef* hcan)
 	HAL_CAN_Receive_IT(hcan,CAN_FIFO0);
 }
 
+///////////////////////////////*提供CAN的外部接口*////////////////////////////////////////////////
+/*提取的形参   ID段号  ， 缸号*/
 
+//	HIGHT_MSG_ID=0x100,  //高度ID
+//	SPEED_MSG_ID,					//速度ID
+//	SP_MSG_ID,					  //特效ID	    
+//	CHAIR_DATA,           //座椅ID
+//	ENV_DATA							//环境特效ID
+	
+uint8_t get_high_speed_date(uint16_t msg_addr,uint8_t motion)
+{
+	switch(msg_addr)
+	{
+		case HIGHT_MSG_ID:
+				 return msg_buff[HIGHT_MSG_ID].date[motion-1];
+		case SPEED_MSG_ID:
+				 return msg_buff[SPEED_MSG_ID].date[motion-1];
+		case SP_MSG_ID:
+				 return msg_buff[SP_MSG_ID].date[1];  //返回座椅特效
+		case CHAIR_DATA:
+				 return msg_buff[SP_MSG_ID].date[2];  //返回座椅ID号；		
+		case ENV_DATA:
+				 return msg_buff[SP_MSG_ID].date[0];  //返回环境特效；
+		default:
+			   break;
+	}	
+	return NONE_DATA;
+}
+
+/*获取CAN数据的更新位*/
+uint8_t get_update_flag(void)
+{
+	uint8_t update_byte;
+	SAFE(update_byte=update_flag);
+	return update_byte;
+}	
 

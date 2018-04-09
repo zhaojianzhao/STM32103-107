@@ -7,6 +7,8 @@
 "stm32107\user_can.o"
 "stm32107\user_uart.o"
 "stm32107\user_time.o"
+"stm32107\sw_timer.o"
+"stm32107\can_tx_server.o"
 "stm32107\stm32f1xx_hal_can.o"
 "stm32107\stm32f1xx_hal_gpio.o"
 "stm32107\stm32f1xx_hal_tim_ex.o"

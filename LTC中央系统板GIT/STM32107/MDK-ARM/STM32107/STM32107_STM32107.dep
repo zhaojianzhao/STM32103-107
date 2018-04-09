@@ -29,7 +29,7 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h)(0x5A0FEAF8)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h)(0x5A0FEAF8)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h)(0x5A0FEAF8)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x5A0FEAF8)
-F (../Src/main.c)(0x5ABAEC8B)(-c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I../Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I.\user_file --C99-I C:\Users\SHUQUEE8006\Desktop\STM32103-107\LTC中央系统板GIT\STM32107\MDK-ARM\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0-D__UVISION_VERSION="514" -D_RTE_ -DSTM32F10X_CL -DUSE_HAL_DRIVER -DSTM32F107xC-o stm32107\main.o --omf_browse stm32107\main.crf --depend stm32107\main.d)
+F (../Src/main.c)(0x5ACB0DBD)(-c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I../Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I.\user_file --C99-I C:\Users\SHUQUEE8006\Desktop\STM32103-107\LTC中央系统板GIT\STM32107\MDK-ARM\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0-D__UVISION_VERSION="514" -D_RTE_ -DSTM32F10X_CL -DUSE_HAL_DRIVER -DSTM32F107xC-o stm32107\main.o --omf_browse stm32107\main.crf --depend stm32107\main.d)
 I (../Inc/main.h)(0x5ABAEC8B)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x5A0FEAF8)
 I (../Inc/stm32f1xx_hal_conf.h)(0x5ABAEC8B)
@@ -58,10 +58,11 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h)(0x5A0FEAF8)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h)(0x5A0FEAF8)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h)(0x5A0FEAF8)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x5A0FEAF8)
-I (.\user_file\user_can.h)(0x5AB4D01D)
-I (.\user_file\user_time.h)(0x5AB4CC1E)
-I (.\user_file\user_config.h)(0x5AB991AD)
+I (.\user_file\user_can.h)(0x5ACB348F)
+I (.\user_file\user_time.h)(0x5ACAE2E0)
+I (.\user_file\user_config.h)(0x5ACB000F)
 I (.\user_file\user_uart.h)(0x5AB9E5FC)
+I (.\user_file\sw_timer.h)(0x5ACB377B)
 F (../Src/stm32f1xx_it.c)(0x5ABAEC8A)(-c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I../Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I.\user_file --C99-I C:\Users\SHUQUEE8006\Desktop\STM32103-107\LTC中央系统板GIT\STM32107\MDK-ARM\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0-D__UVISION_VERSION="514" -D_RTE_ -DSTM32F10X_CL -DUSE_HAL_DRIVER -DSTM32F107xC-o stm32107\stm32f1xx_it.o --omf_browse stm32107\stm32f1xx_it.crf --depend stm32107\stm32f1xx_it.d)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x5A0FEAF8)
 I (../Inc/stm32f1xx_hal_conf.h)(0x5ABAEC8B)
@@ -121,8 +122,8 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h)(0x5A0FEAF8)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h)(0x5A0FEAF8)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h)(0x5A0FEAF8)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x5A0FEAF8)
-F (.\user_file\user_can.c)(0x5ABB533D)(-c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I../Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I.\user_file --C99-I C:\Users\SHUQUEE8006\Desktop\STM32103-107\LTC中央系统板GIT\STM32107\MDK-ARM\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0-D__UVISION_VERSION="514" -D_RTE_ -DSTM32F10X_CL -DUSE_HAL_DRIVER -DSTM32F107xC-o stm32107\user_can.o --omf_browse stm32107\user_can.crf --depend stm32107\user_can.d)
-I (user_file\user_can.h)(0x5AB4D01D)
+F (.\user_file\user_can.c)(0x5ACB3490)(-c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I../Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I.\user_file --C99-I C:\Users\SHUQUEE8006\Desktop\STM32103-107\LTC中央系统板GIT\STM32107\MDK-ARM\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0-D__UVISION_VERSION="514" -D_RTE_ -DSTM32F10X_CL -DUSE_HAL_DRIVER -DSTM32F107xC-o stm32107\user_can.o --omf_browse stm32107\user_can.crf --depend stm32107\user_can.d)
+I (user_file\user_can.h)(0x5ACB348F)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x5A0FEAF8)
 I (../Inc/stm32f1xx_hal_conf.h)(0x5ABAEC8B)
 I (../Inc/main.h)(0x5ABAEC8B)
@@ -151,12 +152,12 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h)(0x5A0FEAF8)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h)(0x5A0FEAF8)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h)(0x5A0FEAF8)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x5A0FEAF8)
-I (user_file\user_config.h)(0x5AB991AD)
-I (user_file\user_time.h)(0x5AB4CC1E)
+I (user_file\user_config.h)(0x5ACB000F)
+I (user_file\user_time.h)(0x5ACAE2E0)
 I (user_file\user_uart.h)(0x5AB9E5FC)
 I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x5475F300)
-F (.\user_file\user_config.h)(0x5AB991AD)()
-F (.\user_file\user_uart.c)(0x5ABAEE2F)(-c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I../Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I.\user_file --C99-I C:\Users\SHUQUEE8006\Desktop\STM32103-107\LTC中央系统板GIT\STM32107\MDK-ARM\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0-D__UVISION_VERSION="514" -D_RTE_ -DSTM32F10X_CL -DUSE_HAL_DRIVER -DSTM32F107xC-o stm32107\user_uart.o --omf_browse stm32107\user_uart.crf --depend stm32107\user_uart.d)
+F (.\user_file\user_config.h)(0x5ACB000F)()
+F (.\user_file\user_uart.c)(0x5ACB0050)(-c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I../Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I.\user_file --C99-I C:\Users\SHUQUEE8006\Desktop\STM32103-107\LTC中央系统板GIT\STM32107\MDK-ARM\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0-D__UVISION_VERSION="514" -D_RTE_ -DSTM32F10X_CL -DUSE_HAL_DRIVER -DSTM32F107xC-o stm32107\user_uart.o --omf_browse stm32107\user_uart.crf --depend stm32107\user_uart.d)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x5A0FEAF8)
 I (../Inc/stm32f1xx_hal_conf.h)(0x5ABAEC8B)
 I (../Inc/main.h)(0x5ABAEC8B)
@@ -185,10 +186,11 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h)(0x5A0FEAF8)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h)(0x5A0FEAF8)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h)(0x5A0FEAF8)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x5A0FEAF8)
-I (user_file\user_config.h)(0x5AB991AD)
+I (user_file\user_config.h)(0x5ACB000F)
+I (user_file\user_can.h)(0x5ACB348F)
 I (user_file\user_uart.h)(0x5AB9E5FC)
 I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x5475F300)
-F (.\user_file\user_time.c)(0x5AB991FF)(-c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I../Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I.\user_file --C99-I C:\Users\SHUQUEE8006\Desktop\STM32103-107\LTC中央系统板GIT\STM32107\MDK-ARM\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0-D__UVISION_VERSION="514" -D_RTE_ -DSTM32F10X_CL -DUSE_HAL_DRIVER -DSTM32F107xC-o stm32107\user_time.o --omf_browse stm32107\user_time.crf --depend stm32107\user_time.d)
+F (.\user_file\user_time.c)(0x5ACB3423)(-c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I../Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I.\user_file --C99-I C:\Users\SHUQUEE8006\Desktop\STM32103-107\LTC中央系统板GIT\STM32107\MDK-ARM\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0-D__UVISION_VERSION="514" -D_RTE_ -DSTM32F10X_CL -DUSE_HAL_DRIVER -DSTM32F107xC-o stm32107\user_time.o --omf_browse stm32107\user_time.crf --depend stm32107\user_time.d)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x5A0FEAF8)
 I (../Inc/stm32f1xx_hal_conf.h)(0x5ABAEC8B)
 I (../Inc/main.h)(0x5ABAEC8B)
@@ -217,8 +219,69 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h)(0x5A0FEAF8)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h)(0x5A0FEAF8)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h)(0x5A0FEAF8)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x5A0FEAF8)
-I (user_file\user_config.h)(0x5AB991AD)
-I (user_file\user_time.h)(0x5AB4CC1E)
+I (user_file\user_config.h)(0x5ACB000F)
+I (user_file\user_time.h)(0x5ACAE2E0)
+F (.\user_file\sw_timer.c)(0x5ACB333E)(-c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I../Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I.\user_file --C99-I C:\Users\SHUQUEE8006\Desktop\STM32103-107\LTC中央系统板GIT\STM32107\MDK-ARM\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0-D__UVISION_VERSION="514" -D_RTE_ -DSTM32F10X_CL -DUSE_HAL_DRIVER -DSTM32F107xC-o stm32107\sw_timer.o --omf_browse stm32107\sw_timer.crf --depend stm32107\sw_timer.d)
+I (user_file\sw_timer.h)(0x5ACB377B)
+I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x5A0FEAF8)
+I (../Inc/stm32f1xx_hal_conf.h)(0x5ABAEC8B)
+I (../Inc/main.h)(0x5ABAEC8B)
+I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h)(0x5A0FEAF8)
+I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h)(0x5A0FEAF8)
+I (../Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f1xx.h)(0x5A0FEAF6)
+I (../Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f107xc.h)(0x5A0FEAF6)
+I (../Drivers/CMSIS/Include/core_cm3.h)(0x5A0FEAF8)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (../Drivers/CMSIS/Include/core_cmInstr.h)(0x5A0FEAF8)
+I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5A0FEAF8)
+I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5A0FEAF8)
+I (../Drivers/CMSIS/Device/ST/STM32F1xx/Include/system_stm32f1xx.h)(0x5A0FEAF6)
+I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5475F300)
+I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc_ex.h)(0x5A0FEAF8)
+I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h)(0x5A0FEAF8)
+I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio_ex.h)(0x5A0FEAF8)
+I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma.h)(0x5A0FEAF8)
+I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma_ex.h)(0x5A0FEAF8)
+I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_can.h)(0x5A0FEAF8)
+I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_can_ex.h)(0x5A0FEAF8)
+I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_cortex.h)(0x5A0FEAF8)
+I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash.h)(0x5A0FEAF8)
+I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash_ex.h)(0x5A0FEAF8)
+I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h)(0x5A0FEAF8)
+I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h)(0x5A0FEAF8)
+I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h)(0x5A0FEAF8)
+I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x5A0FEAF8)
+F (.\user_file\can_tx_server.c)(0x5ACB3821)(-c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I../Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I.\user_file --C99-I C:\Users\SHUQUEE8006\Desktop\STM32103-107\LTC中央系统板GIT\STM32107\MDK-ARM\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0-D__UVISION_VERSION="514" -D_RTE_ -DSTM32F10X_CL -DUSE_HAL_DRIVER -DSTM32F107xC-o stm32107\can_tx_server.o --omf_browse stm32107\can_tx_server.crf --depend stm32107\can_tx_server.d)
+I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x5A0FEAF8)
+I (../Inc/stm32f1xx_hal_conf.h)(0x5ABAEC8B)
+I (../Inc/main.h)(0x5ABAEC8B)
+I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h)(0x5A0FEAF8)
+I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h)(0x5A0FEAF8)
+I (../Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f1xx.h)(0x5A0FEAF6)
+I (../Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f107xc.h)(0x5A0FEAF6)
+I (../Drivers/CMSIS/Include/core_cm3.h)(0x5A0FEAF8)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
+I (../Drivers/CMSIS/Include/core_cmInstr.h)(0x5A0FEAF8)
+I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5A0FEAF8)
+I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5A0FEAF8)
+I (../Drivers/CMSIS/Device/ST/STM32F1xx/Include/system_stm32f1xx.h)(0x5A0FEAF6)
+I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5475F300)
+I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc_ex.h)(0x5A0FEAF8)
+I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h)(0x5A0FEAF8)
+I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio_ex.h)(0x5A0FEAF8)
+I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma.h)(0x5A0FEAF8)
+I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma_ex.h)(0x5A0FEAF8)
+I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_can.h)(0x5A0FEAF8)
+I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_can_ex.h)(0x5A0FEAF8)
+I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_cortex.h)(0x5A0FEAF8)
+I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash.h)(0x5A0FEAF8)
+I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash_ex.h)(0x5A0FEAF8)
+I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h)(0x5A0FEAF8)
+I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h)(0x5A0FEAF8)
+I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h)(0x5A0FEAF8)
+I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x5A0FEAF8)
+I (user_file\user_can.h)(0x5ACB348F)
+I (user_file\user_uart.h)(0x5AB9E5FC)
 F (../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_can.c)(0x5A0FEAF8)(-c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I../Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I.\user_file --C99-I C:\Users\SHUQUEE8006\Desktop\STM32103-107\LTC中央系统板GIT\STM32107\MDK-ARM\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0-D__UVISION_VERSION="514" -D_RTE_ -DSTM32F10X_CL -DUSE_HAL_DRIVER -DSTM32F107xC-o stm32107\stm32f1xx_hal_can.o --omf_browse stm32107\stm32f1xx_hal_can.crf --depend stm32107\stm32f1xx_hal_can.d)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x5A0FEAF8)
 I (../Inc/stm32f1xx_hal_conf.h)(0x5ABAEC8B)
