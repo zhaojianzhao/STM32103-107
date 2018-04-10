@@ -4,7 +4,6 @@
 #include "user_uart.h"
 #include <string.h>
 
-struct status status={0};
 CanTxMsgTypeDef txmessage;
 CanRxMsgTypeDef rxmessage;
 
@@ -90,27 +89,6 @@ void user_can_init(void)
 	HAL_CAN_Receive_IT(&hcan1,CAN_FIFO0);
 }
 
-static uint32_t time2s;
-/*2秒一次心跳发送轮询模块，并且定义FLAG来标志某个座椅缺减的次数并记录*/
-void heart_beat_checkout(void)
-{
-	uint8_t i;
-	HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_13);
-	for(i=0;i<SEAT_AMOUNT;i++)
-	{
-		if(stdid_buff[i]==0)        //判断某个座椅是否缺席；
-		{
-			status.hb_count[i]++;			//缺席次数加一；
-			if(status.hb_count[i]>=3)
-			{
-				stdid_buff[i]=0;         //当缺席的次数大于等于3次就默认缺席；
-			}
-		}	
-		stdid_buff[i]=0;
-	}
-	can_hb_process(); 
-}
-
 /**
   * @brief  Transmits a CAN frame message.
   * @param  dest_addr: pointer to which dest_adrr  
@@ -156,23 +134,9 @@ void HAL_CAN_RxCpltCallback(CAN_HandleTypeDef* hcan)
 {  
 	if(hcan->Instance==CAN1)
 	{	
-		/*如果检测到的STDID号是#define HEART_BEAT 0x200  心跳的ID号；*/
-		if(((hcan1.pRxMsg->StdId&HEART_BEAT)==HEART_BEAT)&&(hcan1.pRxMsg->Data[1]==0x01)&&(hcan1.pRxMsg->Data[2]==0x55))
-		{
-		 stdid_buff[(hcan1.pRxMsg->StdId-HEART_BEAT)]=	hcan1.pRxMsg->StdId;
-		}
-		/*如果接受到的是STATUS_MSG_ID 状态信号*/
-		if(hcan1.pRxMsg->StdId==STATUS_MSG_ID)
-		{
-		  HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_14);
-
-		}
-		/*如果接受到的是NM_MSG_ID 状态信号*/
-		if(hcan1.pRxMsg->StdId==NM_MSG_ID)
-		{
-		  HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_13);
-		}		
+		set_can_rx_flag(hcan->pRxMsg->StdId); 
 	}
+
 	CAN1->IER|=(1<<1);
 	HAL_CAN_Receive_IT(&hcan1,CAN_FIFO0);
 }
@@ -271,34 +235,15 @@ void buscan_control(uint8_t *high, uint8_t sp_seat, uint8_t sp_env,uint8_t *spee
 uint8_t shared_memory_ram[1024] = {0};
 ram_t *ram = (ram_t *)shared_memory_ram;
 /*时间嵌入事件*/
-static uint32_t time10s;
-static uint8_t update;										//串口数据更新标志
 void time_event(void)
 {
-//	SAFE(update=frame.enable);
-//	if(get_tick_flag())
-//	{		
-//		clr_tick_flag(); 
-//		time2s++;
-//		time10s++;
-//		if(time2s>=2000)      //定义2S来发送心跳信号；
-//		{
-//			time2s=0;
-//			heart_beat_checkout();
-//		}
-//		if(time10s>=100)      //定义100ms来发送；
-//		{
-//			time10s=0;	
-//			printf_debug_info();
-//		}	
-//		
-//	}	
-//	if(update)
-//	{
-//		pack.high[0]=frame.buff[2];
-//		pack.high[1]=frame.buff[3];
-//		pack.high[2]=frame.buff[4];
-//		buscan_control(pack.high,frame.buff[6],frame.buff[5],ram->speed,frame.buff[7]);
-//	}	
+	if(get_can_sent_flag())
+	{
+		clr_can_sent_flag();
+		pack.high[0]=frame.buff[2];
+		pack.high[1]=frame.buff[3];
+		pack.high[2]=frame.buff[4];
+		buscan_control(pack.high,frame.buff[6],frame.buff[5],ram->speed,frame.buff[7]);			
+	}	
 	CAN1->IER|=(1<<1); //确保CAN可以在线热插拔；	
 }	

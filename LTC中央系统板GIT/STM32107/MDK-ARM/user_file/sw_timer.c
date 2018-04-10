@@ -27,6 +27,7 @@ void sw_timer_init(void)
 		task_timer_table[task_id].timer=HAL_GetTick();      //获取当前的SYSTICK的值；
 	}
 	can_tx_server_init();
+	can_rx_server_init(); 
 }
 
 /***************时间事件的进程***************/

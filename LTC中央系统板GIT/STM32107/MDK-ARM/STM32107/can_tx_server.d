@@ -30,3 +30,5 @@ stm32107\can_tx_server.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_
 stm32107\can_tx_server.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
 stm32107\can_tx_server.o: user_file\user_can.h
 stm32107\can_tx_server.o: user_file\user_uart.h
+stm32107\can_tx_server.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+stm32107\can_tx_server.o: user_file\user_config.h
