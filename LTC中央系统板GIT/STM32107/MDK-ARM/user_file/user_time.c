@@ -3,7 +3,6 @@
 #include "user_time.h"
 
 static uint8_t can_sent_flag=0;
-static uint8_t timer4_HEART_BEAT_ID_flag=0;
 void user_time_init(void)
 { 
 	HAL_TIM_Base_Start_IT(&htim2);

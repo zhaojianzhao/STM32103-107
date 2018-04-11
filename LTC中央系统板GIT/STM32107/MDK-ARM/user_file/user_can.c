@@ -128,8 +128,6 @@ void can_hb_process()
 	can_send(HEART_BEAT,can_send_buff,8);	
 }
 
-uint16_t stdid_buff[SEAT_AMOUNT];
-
 void HAL_CAN_RxCpltCallback(CAN_HandleTypeDef* hcan)
 {  
 	if(hcan->Instance==CAN1)
@@ -244,6 +242,5 @@ void time_event(void)
 		pack.high[1]=frame.buff[3];
 		pack.high[2]=frame.buff[4];
 		buscan_control(pack.high,frame.buff[6],frame.buff[5],ram->speed,frame.buff[7]);			
-	}	
-	CAN1->IER|=(1<<1); //确保CAN可以在线热插拔；	
+	}		
 }	

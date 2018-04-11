@@ -16,17 +16,11 @@ typedef enum
 	NM_MSG_ID = 0x400
 }can_msg_id_t;	
 
-struct hb_status
-{
-	uint16_t hb_count[SEAT_AMOUNT];
-};
-
-extern struct hb_status hb_status;
-extern uint8_t send_id;  //测试连发的数组标志
-extern uint16_t stdid_buff[SEAT_AMOUNT];
 extern void can_hb_process(void);
 extern void user_can_init(void);  
 extern void can_action_date_sent(void);
 extern void time_event(void);
 extern void set_can_rx_flag(uint16_t);
+extern uint16_t get_hb_display(uint8_t);
+
 #endif

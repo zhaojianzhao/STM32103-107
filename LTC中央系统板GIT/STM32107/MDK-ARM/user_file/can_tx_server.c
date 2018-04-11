@@ -4,11 +4,11 @@
 #include "string.h"
 #include "user_config.h"
 
-struct hb_status hb_status;
 
 typedef void(*p_fun_t)(void);      //定义函数指针类别名；
 void can_tx_handle(void);
 void can_rx_handle(void);	
+void hb_handle(void);
 /***************定义与时间事件关联的函数***************/
 void task_100ms_prf(void)
 {
@@ -17,8 +17,10 @@ void task_100ms_prf(void)
 
 void task_can_tx(void)
 {
+	CAN1->IER|=(1<<1); //确保CAN可以在线热插拔；
 	can_tx_handle();
 	can_rx_handle(); 
+	hb_handle();
 }	
 /***************定义CAN的任务函数体***************/
 static void can_tx_hb(void)    //心跳的内部发送函数；
@@ -113,9 +115,57 @@ typedef enum
 {
 	NM_MSG = 0,
 	STATUS_MSG,
-	HEART_BEAT_MSG,
 	CAN_RX_MAX_NUM
 }can_rx_msg_t;
+
+/****************座椅心跳结构体定义,	重构,函数处理*************************/
+typedef struct
+{
+	uint8_t flag;
+	uint16_t time_out;
+	uint16_t hb_seat_id;   //这个是用来DEBUY 保存座椅ID显示用的；
+}hb_item_t;
+
+hb_item_t hb_item_table[SEAT_AMOUNT]={0};
+
+void hb_item_init(void)
+{
+	uint8_t index;
+	for(index=0;index< SEAT_AMOUNT;index++)
+	{
+		hb_item_table[index].flag =0;
+		hb_item_table[index].time_out=0;  //设置为5倍的接收时间；
+		hb_item_table[index].hb_seat_id=0;
+	}
+}	
+
+void hb_handle(void)
+{
+	uint8_t index;
+	for(index=0;index< SEAT_AMOUNT;index++)
+	{
+		if(hb_item_table[index].flag==1)
+		{
+			hb_item_table[index].flag=0;
+			hb_item_table[index].time_out=0;
+		}
+		else
+		{
+			hb_item_table[index].time_out++;		
+		}	
+		if(hb_item_table[index].time_out>=1000)     //提示进入某个座椅检测不到的处理；
+		{
+			hb_item_table[index].hb_seat_id=0;     
+		}	
+	}	
+}	
+
+uint16_t get_hb_display(uint8_t index)
+{
+	uint16_t hb_temp;
+	hb_temp=hb_item_table[index].hb_seat_id; 
+	return hb_temp;
+}
 /****************CAN接收结构体的定义*************************/
 typedef struct
 {
@@ -141,10 +191,11 @@ can_msg_id_t can_msg_rx_id_maping[CAN_RX_MAX_NUM]=
 {
 	NM_MSG_ID ,
 	STATUS_MSG_ID ,
-	HEART_BEAT_ID      //心跳的ID号段号；
 };
+
 /****************CAN接收标志位设置*************************/
 uint8_t can_rx_flag_init[CAN_RX_MAX_NUM]={0};
+
 /****************CAN接收正常执行函数设置*************************/
 static void can_rx_nm(void)
 {
@@ -154,29 +205,23 @@ static void can_rx_status(void)
 {
 	HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_14);
 }	
-static void can_rx_hb(void)
-{
-	stdid_buff[(hcan1.pRxMsg->StdId-HEART_BEAT)]=	hcan1.pRxMsg->StdId;
-  /*当缺席的次数大于等于5倍的接收时间默认缺席*/
-	hb_status.hb_count[(hcan1.pRxMsg->StdId-HEART_BEAT)]++;
-	HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_15);
-}	
 
 p_fun_t can_rx_fun_init[CAN_RX_MAX_NUM]=
 {
 	&can_rx_nm,
 	&can_rx_status,
-	&can_rx_hb
 };	
+
 /****************CAN接收计数设置*************************/
 uint16_t can_count_init[CAN_RX_MAX_NUM]={0};
+
 /****************CAN接收超时设置*************************/
 uint16_t can_timeout_init[CAN_RX_MAX_NUM]=
 {
 	250,   /* 0 NM_MSG:2500ms */ 
 	50,    //1 STATUS :500ms ;
-	200    // 2 HEART_BIT : 2000ms;
 };
+
 /****************CAN接收超时执行函数设置*************************/
 static void can_rx_nm_ot(void)
 {
@@ -186,16 +231,11 @@ static void can_rx_status_ot(void)
 {
 
 }	
-static void can_rx_hb_ot(void)
-{
-   ;; //全部座椅没有连通才进入此函数；
-}
 
 p_fun_t can_rx_timout_init[CAN_RX_MAX_NUM]=
 {
 	&can_rx_nm_ot,
 	&can_rx_status_ot,
-	&can_rx_hb_ot
 };	
 
 /****************初始化CAN的接收结构体*************************/
@@ -212,6 +252,7 @@ void can_rx_server_init(void)
 		can_rx_table[index].timeout_process=can_rx_timout_init[index];
 	}
 }
+
 /****************CAN的接收进程处理*************************/
 void can_rx_handle(void)
 {
@@ -220,9 +261,9 @@ void can_rx_handle(void)
 	{
 		if(can_rx_table[index].flag==1)
 		{
-			can_rx_table[index].flag=0;
-			can_rx_table[index].count=0;
 			can_rx_table[index].can_rx();
+			can_rx_table[index].flag=0;
+			can_rx_table[index].count=0;			
 			/*缓存数据*/
 			memcpy(can_rx_buff[index].data,hcan1.pRxMsg->Data,8);
 		}	
@@ -245,7 +286,8 @@ void set_can_rx_flag(uint16_t msg_id)
 	/*如果检测到的STDID号是#define HEART_BEAT 0x200  心跳的ID号；*/
 	if(((msg_id&HEART_BEAT)==HEART_BEAT)&&(hcan1.pRxMsg->Data[1]==0x01)&&(hcan1.pRxMsg->Data[2]==0x55))
 	{
-		msg_id=msg_id&HEART_BEAT;
+		hb_item_table[msg_id-HEART_BEAT].flag=1;
+		hb_item_table[msg_id-HEART_BEAT].hb_seat_id=msg_id;
 	}	
 	for(index = NM_MSG;index < CAN_RX_MAX_NUM;index++)
 	{

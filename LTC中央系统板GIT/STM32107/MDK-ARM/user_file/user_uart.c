@@ -26,7 +26,7 @@ void printf_debug_info(void)
 { 	
 	if(mark_uart3tx==0|| __HAL_UART_GET_FLAG(&huart3, UART_FLAG_TXE)!=RESET)
 	{
-		printf("\r\nThe live %d ID is %x\r",mark_uart3tx,stdid_buff[mark_uart3tx]);//打印当前存活的ID号；
+		printf("\r\nThe live %d ID is %x\r",mark_uart3tx,get_hb_display(mark_uart3tx));//打印当前存活的ID号；
     mark_uart3tx++;		
 	}
 	if(mark_uart3tx==SEAT_AMOUNT)
