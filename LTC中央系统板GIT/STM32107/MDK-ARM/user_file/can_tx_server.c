@@ -3,6 +3,7 @@
 #include "user_uart.h"
 #include "string.h"
 #include "user_config.h"
+#include "user_time.h"
 
 
 typedef void(*p_fun_t)(void);      //定义函数指针类别名；
@@ -23,9 +24,11 @@ void task_can_tx(void)
 	hb_handle();
 }	
 /***************定义CAN的任务函数体***************/
+/*发送SEAT_AMOUNT 次的轮询“心跳”信号给座椅，通过can_send_buff[0]代表座椅地址  can_send_buff[1]代表心跳信号  can_send_buff[2]代表验证码*/
+static uint8_t can_send_buff[8]={0x00,0x00,0x55};
 static void can_tx_hb(void)    //心跳的内部发送函数；
 {
-	can_hb_process(); 
+	can_send(HEART_BEAT,can_send_buff,8);	 
 }	
 /***************定义CAN的相关要素***************/
 typedef struct
@@ -55,11 +58,6 @@ can_msg_id_t can_msg_tx_id_maping[CAN_TX_MAX_NUM]=
 {
 	HEART_BEAT_ID
 };
-/**********************CAN外部发送数据的调用函数******************************/
-void set_heart_msg(uint8_t *tx_data)
-{
-	memcpy(can_buff[HEART_BEAT_ID_MSG].data, tx_data, 8);
-}
 
 /****************赋值CAN的发送周期*************************/
 uint8_t tx_msg_cycle_init[CAN_TX_MAX_NUM]=
@@ -104,7 +102,106 @@ void can_tx_handle(void)
 	}	
 }	
 
+/**********************CAN50MS发送数据函数INIT,mapping******************************/
+//	STATUS_MSG_ID = 0x0,
+//	HIGHT_MSG_ID=0x100,  //高度ID
+//	SPEED_MSG_ID,					//速度ID
+//	SP_MSG_ID,					  //特效ID	
+//	HEART_BEAT_ID=0x200,     //心跳的ID号段号；
+//	NM_MSG_ID = 0x400
+typedef enum
+{
+	HIGHT_MSG_ID_MSG=0,
+	SPEED_MSG_ID_MSG,					//速度ID
+  SP_MSG_ID_MSG,				  //特效ID	
+	CAN_ACTION_MAX_NUM
+}task_can_action_t;	
 
+typedef struct
+{
+	uint16_t msg_id;
+	p_fun_t can_action_tx;
+
+}can_tx_action_item;	
+
+typedef struct 
+{
+	uint8_t data[8];
+}can_action_data_t;
+
+can_action_data_t can_action_buff[CAN_ACTION_MAX_NUM]={0};
+
+can_tx_action_item can_tx_action_table[CAN_ACTION_MAX_NUM]={0};
+
+uint16_t can_action_msg_mapping[CAN_ACTION_MAX_NUM]=
+{
+	HIGHT_MSG_ID,
+	SPEED_MSG_ID,
+	SP_MSG_ID
+};
+static void can_action_hight(void)
+{
+	can_send(HIGHT_MSG_ID,can_action_buff[HIGHT_MSG_ID_MSG].data,8);
+}
+static void can_action_speed(void)
+{
+	can_send(SPEED_MSG_ID,can_action_buff[SPEED_MSG_ID_MSG].data,8);
+}
+static void can_action_sp(void)
+{
+	can_send(SP_MSG_ID,can_action_buff[SP_MSG_ID_MSG].data,8);
+}
+
+p_fun_t can_action_fun_init[CAN_ACTION_MAX_NUM]=
+{
+	&can_action_hight,
+	&can_action_speed,
+	&can_action_sp
+};
+
+void can_action_tx_init(void)
+{
+	task_can_action_t index;
+	for(index = HIGHT_MSG_ID_MSG; index < CAN_ACTION_MAX_NUM; index++)
+	{
+		can_tx_action_table[index].msg_id=can_action_msg_mapping[index];
+		can_tx_action_table[index].can_action_tx=can_action_fun_init[index];
+	}
+}
+	
+void can_action_handle(void)
+{
+	task_can_action_t index;
+	if(get_can_sent_flag())
+	{
+		for(index = HIGHT_MSG_ID_MSG; index < CAN_ACTION_MAX_NUM; index++)
+		{
+			can_tx_action_table[index].can_action_tx();
+		}
+		clr_can_sent_flag();	
+	}			
+}	
+
+/**********************CAN外部发送数据的调用函数******************************/
+void set_heart_msg(uint8_t *tx_data)
+{
+	memcpy(can_buff[HEART_BEAT_ID_MSG].data, tx_data, 8);
+}
+
+void set_hight_msg(uint8_t *tx_data)
+{
+	memcpy(can_buff[HIGHT_MSG_ID_MSG].data, tx_data, 8);
+}
+
+void set_speed_msg(uint8_t *tx_data)
+{
+	memcpy(can_buff[SPEED_MSG_ID_MSG].data, tx_data, 8);
+}
+
+void set_seat_sp_msg(uint8_t *tx_data)
+{
+	memcpy(can_buff[SP_MSG_ID_MSG].data, tx_data, 8);
+}
 /****************CAN接收模块的定义*************************/
 /****************CAN接收模块的定义*************************/
 /****************CAN接收模块的定义*************************/
@@ -279,7 +376,7 @@ void can_rx_handle(void)
 	}	
 }
 
-/****************提供给外部的FLAG标志位更改*************************/
+/****************提供给中断的FLAG标志位更改*************************/
 void set_can_rx_flag(uint16_t msg_id)
 {
 	can_rx_msg_t index;
@@ -296,4 +393,14 @@ void set_can_rx_flag(uint16_t msg_id)
 			SAFE(can_rx_table[index].flag=1);     //使能对应的FLAG标志位；
 		}	
 	}
+}
+
+/*****************CAN接收读取的外部接口********************/
+void get_status_msg(uint8_t *tx_data)
+{
+	memcpy(tx_data,can_rx_buff[STATUS_MSG].data,8);
+}
+void set_nm_msg(uint8_t *tx_data)
+{
+	memcpy(tx_data,can_rx_buff[NM_MSG].data,8);
 }

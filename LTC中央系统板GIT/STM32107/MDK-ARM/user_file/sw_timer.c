@@ -29,6 +29,7 @@ void sw_timer_init(void)
 	can_tx_server_init();
 	can_rx_server_init(); 
 	hb_item_init(); 
+	can_action_tx_init();
 }
 
 /***************时间事件的进程***************/

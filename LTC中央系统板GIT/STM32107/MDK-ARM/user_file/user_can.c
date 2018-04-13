@@ -121,13 +121,6 @@ void can_send(uint16_t msg_id, uint8_t *data, uint16_t len)
 	CAN1->IER|=(1<<1);   //防止断开，IER^2位复位；
 }
 
-/*发送SEAT_AMOUNT 次的轮询“心跳”信号给座椅，通过can_send_buff[0]代表座椅地址  can_send_buff[1]代表心跳信号  can_send_buff[2]代表验证码*/
-static uint8_t can_send_buff[8]={0x00,0x00,0x55};
-void can_hb_process()
-{
-	can_send(HEART_BEAT,can_send_buff,8);	
-}
-
 void HAL_CAN_RxCpltCallback(CAN_HandleTypeDef* hcan)
 {  
 	if(hcan->Instance==CAN1)
@@ -139,37 +132,14 @@ void HAL_CAN_RxCpltCallback(CAN_HandleTypeDef* hcan)
 	HAL_CAN_Receive_IT(&hcan1,CAN_FIFO0);
 }
 
-//////////*以下是模块移植*///////
-//////////*以下是模块移植*///////
-//////////*以下是模块移植*///////
-//////////*以下是模块移植*///////
-//////////*以下是模块移植*///////
+
+//////////*以下是模块用于串口测试数据*///////
+//////////*以下是模块用于串口测试数据*///////
+//////////*以下是模块用于串口测试数据*///////
+//////////*以下是模块用于串口测试数据*///////
+//////////*以下是模块用于串口测试数据*///////
 #pragma pack(1)
-#ifndef BUS_CAN
-
-typedef struct
-{
-	uint8_t high[6];
-	uint8_t reserve_0[2];
-	uint8_t sp_seat;
-	uint8_t sp_env;
-	uint8_t reserve_1[6];
-	uint8_t reserve_2[255-16];
-	uint8_t switch_function;
-} ram_t;
-
-typedef struct bus485_control_pack
-{	
-	uint8_t head;
-	uint8_t funcode;
-	uint8_t high[3];
-	uint8_t sp_seat;
-	uint8_t sp_env;
-	uint8_t seat_id;
-	uint8_t end;
-} bus485_control_pack_t;
-#else
-
+#ifdef BUS_CAN_DEBUG
 typedef struct
 {
 	uint8_t high[6];
@@ -190,23 +160,10 @@ typedef struct buscan_control_pack
 #pragma pack()
 #endif
 
-#ifndef BUS_CAN
-bus485_control_pack_t pack = {.head=0xff, .end=0xee};
-
-void bus485_control(uint8_t *high, uint8_t sp_seat, uint8_t sp_env, uint8_t seat_id)
-{
-	pack.funcode = 0xc2;
-	memcpy(pack.high, high, sizeof(pack.high));
-	pack.sp_seat = sp_seat;
-	pack.sp_env = sp_env;
-	pack.seat_id = seat_id;
-	HAL_UART_Transmit_DMA(&huart3, (uint8_t *)&pack, sizeof(pack));
-}
-
-#else
+#ifdef BUS_CAN_DEBUG
 buscan_control_pack_t pack ;
 static uint8_t mark_cantx;
-void buscan_control(uint8_t *high, uint8_t sp_seat, uint8_t sp_env,uint8_t *speed, uint8_t seat_id)
+void buscan_control(uint8_t *high, uint8_t sp_seat, uint8_t sp_env,uint8_t *speed, uint8_t seat_id) 
 {
 //	memcpy(pack.high,high,sizeof(pack.high));
 	memcpy(pack.speed,speed,sizeof(pack.speed));
@@ -216,22 +173,21 @@ void buscan_control(uint8_t *high, uint8_t sp_seat, uint8_t sp_env,uint8_t *spee
 	switch(mark_cantx)
 	{
 		case 0: mark_cantx++;
-						can_send(HIGHT_MSG_ID,pack.high,3);    //先发	HIGHT_MSG_ID=0x100,  //高度ID
+						can_send(HIGHT_MSG_ID,pack.high,8);    //先发	HIGHT_MSG_ID=0x100,  //高度ID
 						break;
 		case 1: mark_cantx++;
-						can_send(SPEED_MSG_ID,pack.speed, 3)	;			//SPEED_MSG_ID  速度ID
+						can_send(SPEED_MSG_ID,pack.speed, 8)	;			//SPEED_MSG_ID  速度ID
 						break;
 		case 2: mark_cantx=0;
 						clr_can_sent_flag();
 						frame.enable=0;
-						can_send(SP_MSG_ID,pack.sp_seat_env_id,3);     //SP_MSG_ID				  //特效ID
+						can_send(SP_MSG_ID,pack.sp_seat_env_id,8);     //SP_MSG_ID				  //特效ID
 						break;
 	}			
 }
-#endif
 
 uint8_t shared_memory_ram[1024] = {0};
-ram_t *ram = (ram_t *)shared_memory_ram;
+ram_t *ram = (ram_t *)shared_memory_ram; 
 /*时间嵌入事件*/
 void time_event(void)
 {
@@ -244,3 +200,5 @@ void time_event(void)
 		buscan_control(pack.high,frame.buff[6],frame.buff[5],ram->speed,frame.buff[7]);			
 	}		
 }	
+#endif 
+

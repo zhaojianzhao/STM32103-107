@@ -125,7 +125,10 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
+#ifdef BUS_CAN_DEBUG
 	time_event();
+#endif		
+	can_action_handle();	 
 	sw_timer_handle(); 
 	}
 	

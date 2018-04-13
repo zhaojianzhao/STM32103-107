@@ -13,5 +13,6 @@ extern void sw_timer_handle(void);
 extern void can_tx_server_init(void);	
 extern void can_rx_server_init(void);		
 extern void hb_item_init(void);		
-extern void hb_handle(void);					
+extern void hb_handle(void);	
+extern void can_action_tx_init(void);					
 #endif
