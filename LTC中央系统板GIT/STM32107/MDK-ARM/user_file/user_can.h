@@ -2,7 +2,7 @@
 #define __USER_CAN_H
 #include "stm32f1xx_hal.h"
 
-//#define BUS_CAN_DEBUG   //使用CAN总线模式
+#define BUS_CAN_DEBUG   //使用CAN总线模式
 
 #define SEAT_AMOUNT 10 //设置座椅的个数；
 #define HEART_BEAT  0x200
